@@ -1,189 +1,188 @@
 <script>
-  import 'carbon-components-svelte/css/g10.css';
+  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import {
-    TextInput,
-    PasswordInput,
-    Form,
-    FormGroup,
-    RadioButton,
-    RadioButtonGroup,
-    Button,
-  } from "carbon-components-svelte";
+  import Icon from '@iconify/svelte';
 
-  let username = "";
-  let email = "";
-  let password = "";
-  let role = "goat";
-  let invalid = false;
-  let touched = false;
+  let heroRef, featuresRef, testimonialsRef, pricingRef, investorsRef, aboutRef;
 
-  // Reactive password validation only after user starts typing
-  $: invalid = touched && !/^(?=.*[a-z])(?=.*\d)[a-zA-Z\d]{6,}$/.test(password);
+  const features = [
+    {
+      title: "AI-Powered Herd Tracking",
+      description: "Monitor your cows in real time with smart sensors and predictive analytics.",
+     
+    },
+    {
+      title: "Health & Nutrition Insights",
+      description: "Optimize feeding and health management using AI-driven recommendations.",
+      
+    },
+    {
+      title: "Farm Efficiency Analytics",
+      description: "Streamline operations and boost productivity with data-backed decisions.",
+      
+    },
+  ];
 
-  async function handleSubmit(event) {
-    event.preventDefault();
 
-    if (!username || !email || !password) {
-      alert("Please fill out all fields.");
-      return;
-    }
 
-    touched = true;
-    if (invalid) {
-      alert("Please enter a valid password.");
-      return;
-    }
 
-    const response = await fetch("http://localhost:8080/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password, role })
-    });
-
-    if (response.ok) {
-      // Redirect based on role to the correct dashboard page
-      const dashboardMap = {
-        goat: "/dashboard/GoatAnalytics",
-        cow: "/dashboard/CowAnalytics"
-      };
-      goto(dashboardMap[role] || "/dashboard");
-    } else {
-      const msg = await response.text();
-      alert("Registration failed: " + msg);
-    }
+  function scrollToSection(ref) {
+    ref.scrollIntoView({ behavior: 'smooth' });
   }
+
+  let displayedText = "Smart Dairy Farming Powered by AI";
 </script>
 
-<main>
-  <h1>Cowlibrate AI Registration</h1>
+<nav class="nav-bar">
+  <div class="brand">CowlibrateAI</div>
+  <ul class="nav-links">
+    <li><button on:click={() => scrollToSection(heroRef)}>Home</button></li>
+    <li><button on:click={() => scrollToSection(featuresRef)}>Features</button></li>
+    <li><button on:click={() => scrollToSection(testimonialsRef)}>Testimonials</button></li>
+    <li><button on:click={() => scrollToSection(pricingRef)}>Pricing</button></li>
+    <li><button on:click={() => scrollToSection(investorsRef)}>Investors</button></li>
+    <li><button on:click={() => scrollToSection(aboutRef)}>About</button></li>
+    <li><button class="nav-cta-btn" on:click={() => goto('/dashboard/registration')}>Registration</button></li>
+  </ul>
+</nav>
 
-  <Form on:submit={handleSubmit}>
-    <TextInput
-      labelText="User name"
-      placeholder="Enter user name..."
-      bind:value={username}
-      required
-    />
-
-    <TextInput
-      labelText="Email"
-      placeholder="Enter email address..."
-      bind:value={email}
-      type="email"
-      required
-    />
-
-    <PasswordInput
-      bind:value={password}
-      required
-      on:input={() => (touched = true)}
-      type="password"
-      labelText="Password"
-      placeholder="Enter password"
-      invalid={invalid}
-      invalidText="Password must be at least 6 characters, include a lowercase letter and a number"
-    />
-
-    <FormGroup legendText="Role">
-      <RadioButtonGroup name="role" bind:selected={role}>
-        <RadioButton id="radio-1" value="goat" labelText="Goat Farmer" />
-        <RadioButton id="radio-2" value="cow" labelText="Cow Farmer" />
-      </RadioButtonGroup>
-    </FormGroup>
-
-    <div class="button-container">
-      <Button type="submit" kind="success" class="submit-button">
-        Register
-      </Button>
+<main class="container">
+  <section bind:this={heroRef} class="hero">
+    <div class="hero-text">
+      <h1>{displayedText}</h1>
+      <p>Revolutionize your dairy operations with real-time monitoring and intelligent insights.</p>
+      <button class="cta-btn" on:click={() => goto('/dashboard/registration')}>
+        Join the Moovement
+        <Icon icon="mdi:arrow-right" style="margin-left: 0.6rem; width: 1.25rem; height: 1.25rem;" />
+      </button>
     </div>
-  </Form>
+  </section>
+
+  <section bind:this={featuresRef} class="features">
+    {#each features as { title, description, icon }}
+      <article class="feature-card">
+        <Icon icon={icon} class="feature-icon" />
+        <h3>{title}</h3>
+        <p>{description}</p>
+      </article>
+    {/each}
+  </section>
+
+
+
+
+
+  <section bind:this={investorsRef} class="investors">
+    <h2>Backed By</h2>
+    <div class="investor-logos">
+      <img src="" alt="VC Firm 1" />
+      <img src="" alt="VC Firm 2" />
+    </div>
+  </section>
+
+  <section bind:this={aboutRef} class="about">
+    <h2>About CowlibrateAI</h2>
+    <p>Founded in 2024, we are dedicated to making dairy farming smarter and more sustainable through AI-powered solutions.</p>
+    <p>Our mission is to empower farmers with tools that optimize herd health, improve productivity, and reduce environmental impact.</p>
+  </section>
 </main>
 
+<footer class="footer">
+  © {new Date().getFullYear()} CowlibrateAI. All rights reserved.
+</footer>
+
 <style>
-  main {
-    max-width: 640px;
-    margin: 4rem auto;
-    padding: 2.5rem;
-    background-color: var(--cds-layer);
-    border-radius: 12px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  :global(body) {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: white;
+    color: #111;
+    scroll-behavior: smooth;
   }
-
-  h1 {
-    text-align: center;
-    font-size: 2rem;
-    color: var(--cds-text-primary);
-    margin-bottom: 2rem;
-  }
-
-  :global(.bx--form-item) {
-    margin-bottom: 1.5rem;
-  }
-
-  :global(.bx--form-item .bx--label) {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--cds-text-secondary);
-  }
-
-  :global(.bx--text-input),
-  :global(.bx--password-input) {
-    font-size: 1rem;
-    background-color: var(--cds-layer);
-  }
-
-  :global(.bx--text-input:focus),
-  :global(.bx--password-input:focus),
-  :global(.bx--radio-button:focus) {
-    outline: 2px solid #42be65 !important;
-    box-shadow: 0 0 0 2px rgba(66, 190, 101, 0.3);
-    border-color: #42be65;
-  }
-
-  :global(.bx--form-group) {
-    padding-top: 1rem;
-    margin-top: 2rem;
-    border-top: 1px solid var(--cds-border-subtle);
+  .nav-bar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: #000;
+    color: white;
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+    padding: 1rem 3rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    z-index: 999;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: 1.2px;
+  }
+  .nav-links {
+    list-style: none;
+    display: flex;
     gap: 1rem;
+    margin: 0;
+    padding: 0;
   }
-
-  :global(.bx--radio-button-group) {
+  .nav-links button, .nav-cta-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: background-color 0.25s ease;
     display: flex;
+    align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 1.5rem;
   }
-
-  .button-container {
+  .nav-links button:hover, .nav-cta-btn:hover {
+    background-color: #444;
+  }
+  .container {
+    max-width: 1100px;
+    margin: 6rem auto 3rem;
+    padding: 0 2rem;
+  }
+  .hero {
+    text-align: center;
+    padding: 6rem 0 4rem;
+  }
+  .hero h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+  }
+  .hero p {
+    font-size: 1.3rem;
+    margin-top: 1rem;
+    color: #222;
+  }
+  .cta-btn {
     display: flex;
+    align-items: center;
     justify-content: center;
-    margin-top: 2rem;
+    margin: 2rem auto 0;
+    padding: 0.75rem 1.5rem;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .cta-btn:hover {
+    background: #222;
   }
 
-  @media (max-width: 600px) {
-    main {
-      padding: 1.5rem;
-    }
-
-    h1 {
-      font-size: 1.5rem;
-    }
-
-    :global(.bx--radio-button-group) {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .button-container {
-      width: 100%;
-    }
-
-    :global(.bx--btn) {
-      width: 100%;
-    }
+  .footer {
+    background: #000;
+    color: white;
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 0.9rem;
   }
 </style>
