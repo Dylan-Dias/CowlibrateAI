@@ -1,208 +1,145 @@
 <script>
   import 'carbon-components-svelte/css/g10.css';
-  import { Grid, Row, Column, Tile } from 'carbon-components-svelte';
+  import { Grid, Row, Column, Tile, Button, Header, HeaderNav, HeaderNavItem } from 'carbon-components-svelte';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
 
   let ApexCharts;
-  let pieChart, barChart, lineChart;
+  let charts = {};
 
-  let pieChartContainer;
-  let barChartContainer;
-  let lineChartContainer;
-
-  // Initial options (will be updated dynamically)
-  const pieOptions = {
-    chart: { type: 'pie', height: 300 },
-    labels: [],  // start empty, will fill from API
-    legend: { position: 'bottom' },
-    responsive: [{ breakpoint: 480, options: { chart: { width: 300 } } }],
-  };
-
-  const barOptions = {
-    chart: { id: 'milk-yield', type: 'bar', height: 300 },
-    xaxis: { categories: [] }, // fill dynamically
-    title: { text: 'Milk Yield (Liters)', align: 'center' },
-  };
-
-  const lineOptions = {
-    chart: { id: 'feed-efficiency', type: 'line', height: 300 },
-    xaxis: { categories: [] }, // fill dynamically
-    stroke: { curve: 'smooth' },
-    title: { text: 'Feed Efficiency (%)', align: 'center' },
-  };
+  const chartConfigs = [
+    {
+      id: "pieChart",
+      options: { chart: { type: "pie", height: 300 }, labels: ["Goats", "Cows", "Sheep"], legend: { position: "bottom" }, title: { text: "Breed Distribution", align: "center" } },
+      series: [44, 55, 41]
+    },
+    {
+      id: "barChart",
+      options: { chart: { type: "bar", height: 300 }, xaxis: { categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"] }, title: { text: "Milk Yield (Liters)", align: "center" } },
+      series: [{ name: "Milk Yield", data: [30, 40, 35, 50, 49, 60] }]
+    },
+    {
+      id: "lineChart",
+      options: { chart: { type: "line", height: 300 }, xaxis: { categories: ["Week 1", "Week 2", "Week 3", "Week 4"] }, stroke: { curve: "smooth" }, title: { text: "Feed Efficiency (%)", align: "center" } },
+      series: [{ name: "Efficiency", data: [75, 78, 80, 85] }]
+    },
+    {
+      id: "areaChart",
+      options: { chart: { type: "area", height: 300 }, xaxis: { categories: ["Mon", "Tue", "Wed", "Thu", "Fri"] }, title: { text: "Daily Water Intake (Liters)", align: "center" } },
+      series: [{ name: "Water", data: [120, 132, 101, 134, 90] }]
+    },
+    {
+      id: "radarChart",
+      options: { chart: { type: "radar", height: 300 }, xaxis: { categories: ["Protein", "Fiber", "Fat", "Minerals", "Vitamins"] }, title: { text: "Nutrient Balance", align: "center" } },
+      series: [{ name: "Goat Diet", data: [80, 50, 60, 90, 70] }]
+    },
+    {
+      id: "donutChart",
+      options: { chart: { type: "donut", height: 300 }, labels: ["Healthy", "Sick", "Observation"], legend: { position: "bottom" }, title: { text: "Health Status Distribution", align: "center" } },
+      series: [70, 15, 15]
+    }
+  ];
 
   onMount(async () => {
-    const module = await import('apexcharts');
+    const module = await import("apexcharts");
     ApexCharts = module.default;
 
-    pieChart = new ApexCharts(pieChartContainer, { ...pieOptions, series: [] });
-    await pieChart.render();
-
-    barChart = new ApexCharts(barChartContainer, { ...barOptions, series: [] });
-    await barChart.render();
-
-    lineChart = new ApexCharts(lineChartContainer, { ...lineOptions, series: [] });
-    await lineChart.render();
-
-    await fetchOptimizedData(); // Fetch data and update charts dynamically
-  });
-
- async function fetchOptimizedData() {
-  try {
-    const res = await fetch('http://localhost:8080/api/optimize-run/cows'); // full backend URL
-    if (!res.ok) throw new Error('Network response was not ok');
-
-    const data = await res.json();
-
-    // Normalize breed strings to lowercase for counting
-    const breedCounts = {};
-    data.selected_cows.forEach(cow => {
-      const breedNormalized = cow.breed.toLowerCase();
-      breedCounts[breedNormalized] = (breedCounts[breedNormalized] || 0) + 1;
+    chartConfigs.forEach(cfg => {
+      const chart = new ApexCharts(document.querySelector(`#${cfg.id}`), { ...cfg.options, series: cfg.series });
+      chart.render();
+      charts[cfg.id] = chart;
     });
-
-    // Capitalize first letter for display labels
-    const pieLabels = Object.keys(breedCounts).map(
-      b => b.charAt(0).toUpperCase() + b.slice(1)
-    );
-    const pieSeries = Object.values(breedCounts);
-
-    // Example bar chart: average milk yield for placeholder months
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-    const avgMilkYield = data.selected_cows.reduce((sum, c) => sum + c.milk_yield, 0) / data.selected_cows.length;
-    const milkYields = months.map(() => parseFloat(avgMilkYield.toFixed(2)));
-
-    // Dummy feed efficiency data for line chart
-    const weeks = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
-    const feedEfficiency = [75, 78, 80, 85];
-
-    // Update charts
-    if (pieChart) {
-      pieChart.updateOptions({ labels: pieLabels });
-      pieChart.updateSeries(pieSeries);
-    }
-    if (barChart) {
-      barChart.updateOptions({ xaxis: { categories: months } });
-      barChart.updateSeries([{ name: 'Milk Yield', data: milkYields }]);
-    }
-    if (lineChart) {
-      lineChart.updateOptions({ xaxis: { categories: weeks } });
-      lineChart.updateSeries([{ name: 'Feed Efficiency', data: feedEfficiency }]);
-    }
-  } catch (error) {
-    console.error('Failed to fetch or update charts:', error);
-  }
-}
-
+  });
 
   function navigateTo(path) {
     goto(path);
   }
+
+  async function generateReport() {
+    const { jsPDF } = await import("jspdf");
+    const html2canvas = (await import("html2canvas")).default;
+
+    const pdf = new jsPDF("p", "pt", "a4");
+    const dashboardEl = document.querySelector("#dashboard");
+
+    const canvas = await html2canvas(dashboardEl, { scale: 2 });
+    const imgData = canvas.toDataURL("image/png");
+
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save("Goat-Analytics-Report.pdf");
+  }
+    function logout() {
+    localStorage.removeItem("token");   // remove JWT
+    localStorage.removeItem("role");    // if you stored role
+    goto("Login");                     // redirect to login page
+  }
 </script>
 
-<nav class="nav-bar">
-  <div class="brand">Bovine Analytics & Insights</div>
-  <ul class="nav-links">
-    <li><button on:click={() => navigateTo('/dashboard/cow')}>Dairy Input</button></li>
-  </ul>
-</nav>
+<!-- NAV BAR -->
+<Header company="CowlibrateAI Dashboard" class="nav-bar">
+  <HeaderNav>
+    <HeaderNavItem on:click={() => navigateTo('/dashboard/cow')}>Cow Input</HeaderNavItem>
+    <HeaderNavItem on:click={generateReport}>Generate Report</HeaderNavItem>
+    <HeaderNavItem on:click={logout}>Logout</HeaderNavItem>
 
-<Grid>
-  <Row>
-    <Column sm="4" md="4" lg="4">
-      <Tile>
-        <h2>Breed Distribution</h2>
-        <div bind:this={pieChartContainer} class="chart-container"></div>
-      </Tile>
-    </Column>
+  </HeaderNav>
+</Header>
 
-    <Column sm="4" md="4" lg="4">
-      <Tile>
-        <h2>Milk Yield (Monthly)</h2>
-        <div bind:this={barChartContainer} class="chart-container"></div>
-      </Tile>
-    </Column>
-
-    <Column sm="4" md="4" lg="4">
-      <Tile>
-        <h2>Feed Efficiency</h2>
-        <div bind:this={lineChartContainer} class="chart-container"></div>
-      </Tile>
-    </Column>
-  </Row>
-</Grid>
+<!-- DASHBOARD -->
+<main id="dashboard">
+  <Grid>
+    <Row>
+      {#each chartConfigs as cfg}
+        <Column sm="4" md="4" lg="4">
+          <Tile>
+            <h2>{cfg.options.title?.text || "Chart"}</h2>
+            <div id={cfg.id} class="chart-container"></div>
+          </Tile>
+        </Column>
+      {/each}
+    </Row>
+  </Grid>
+</main>
 
 <style>
-  /* Nav Bar */
-  .nav-bar {
-    display: flex;
-    align-items: center;
-    background-color: #3949ab;
-    padding: 0.75rem 1.5rem;
-    color: white;
+
+
+  :global(.bx--header__name) {
+    color: white !important;
     font-weight: 700;
   }
 
-  .brand {
-    flex-grow: 1;
-    font-size: 1.25rem;
+  :global(.bx--header__nav-item) {
+    color: white !important;
   }
 
-  .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 1rem;
-    margin: 0;
-    padding: 0;
+  :global(.bx--header__nav-item:hover) {
+    color: #4fc3f7 !important;
   }
 
-  .nav-links button {
-    background: transparent;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    transition: background-color 0.25s ease;
-  }
-
-  .nav-links button:hover {
-    background-color: #5561f0;
-  }
-
-  /* Tiles */
   :global(.bx--tile) {
     padding: 1rem 1.5rem;
+    background: #f4f4f4;
   }
 
   h2 {
     font-size: 1.25rem;
     margin-bottom: 1rem;
-    color: var(--cds-text-primary);
+    color: #222;
     font-weight: 600;
+    text-align: center;
   }
 
   .chart-container {
     width: 100%;
     height: 300px;
     min-height: 300px;
-    background-color: var(--cds-layer);
     border-radius: 8px;
+    background-color: white;
     box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 600px) {
-    .chart-container {
-      height: 250px;
-      min-height: 250px;
-    }
-
-    h2 {
-      font-size: 1.1rem;
-    }
   }
 </style>

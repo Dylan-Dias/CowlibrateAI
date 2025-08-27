@@ -8,6 +8,8 @@
     InlineNotification
   } from 'carbon-components-svelte';
 
+  import { goto } from '$app/navigation';
+
   let email = '';
   let message = '';
   let error = '';
@@ -41,6 +43,10 @@
       error = 'Network error. Please try again later.';
     }
   }
+
+  function BackToLogin() {
+    goto('/dashboard/Login');
+  }
 </script>
 
 <main>
@@ -64,7 +70,12 @@
         required
       />
 
-      <Button type="submit" kind="primary">Send Reset Link</Button>
+      <div class="button-group">
+        <Button type="submit" kind="primary" size="small">Send Reset Link</Button>
+        <Button type="button" kind="tertiary" size="small" on:click={BackToLogin}>
+          Back to Login
+        </Button>
+      </div>
     </FormGroup>
   </Form>
 </main>
@@ -92,7 +103,9 @@
     gap: 1.5rem;
   }
 
-  :global(.bx--btn) {
+  .button-group {
+    display: flex;
+    gap: 0.75rem;
     margin-top: 1rem;
   }
 

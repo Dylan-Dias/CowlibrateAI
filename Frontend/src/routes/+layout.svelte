@@ -1,5 +1,8 @@
 <script>
-    import "../app.css";
+  // Import stylesheets
+  import "../routes/app.css"
+  import "carbon-components-svelte/css/g10.css";
 </script>
-<slot />
 
+<!-- Slot for rendering child components -->
+<slot />

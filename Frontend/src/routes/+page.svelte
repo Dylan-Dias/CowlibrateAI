@@ -1,188 +1,270 @@
 <script>
-  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import Icon from '@iconify/svelte';
+  import {
+    Header,
+    HeaderNav,
+    HeaderNavItem,
+    Button,
+    TextInput,
+    TextArea,
+    Form,
+    FormGroup
+  } from "carbon-components-svelte";
 
-  let heroRef, featuresRef, testimonialsRef, pricingRef, investorsRef, aboutRef;
+  // Information Tab Data
+const infoItems = [
+  {
+    title: "About CowlibrateAI",
+    content: "CowlibrateAI is a specialized web application platform that collaborates with local and foreign farms to provide exceptional software at an affordable cost. Our goal is to assist farmers and individuals in the agriculture industry by offering this cutting edge application that streamlines dairy operations."
+  },
+  {
+    title: "Contact Information",
+    content: "Reach out to us via email, phone, or contact form for personalized consultations and support."
+  }
+];
 
+
+  // Features Data
   const features = [
-    {
-      title: "AI-Powered Herd Tracking",
-      description: "Monitor your cows in real time with smart sensors and predictive analytics.",
-     
-    },
-    {
-      title: "Health & Nutrition Insights",
-      description: "Optimize feeding and health management using AI-driven recommendations.",
-      
-    },
-    {
-      title: "Farm Efficiency Analytics",
-      description: "Streamline operations and boost productivity with data-backed decisions.",
-      
-    },
+    { title: "Health & Nutrition Insights", description: "Optimize feeding and health management using AI-driven recommendations." },
+    { title: "Farm Efficiency Analytics", description: "Streamline operations and boost productivity with data-backed decisions." },
+    { title: "Future Work", description: "Computer Vision to help find patterns in cow birth defects or deficiencies for LLMs and AI work." }
   ];
 
+  // FAQ Data
+  let faqs = [
+    { question: "What is CowlibrateAI?", answer: "It’s an AI system to maximize dairy production.", open: false },
+    { question: "Who can use it?", answer: "Farmers looking to improve efficiency and productivity.", open: false },
+    { question: "Is it affordable?", answer: "Yes, designed for farmers who cannot afford dairy parlors.", open: false }
+  ];
 
-
-
-  function scrollToSection(ref) {
-    ref.scrollIntoView({ behavior: 'smooth' });
+  function toggleFAQ(index) {
+    faqs = faqs.map((faq, i) => ({
+      ...faq,
+      open: i === index ? !faq.open : false
+    }));
   }
 
-  let displayedText = "Smart Dairy Farming Powered by AI";
+  // Contact form state
+  let contactName = '';
+  let contactEmail = '';
+  let contactMessage = '';
+
+  function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function submitContactForm(event) {
+    event.preventDefault();
+    console.log("Name:", contactName);
+    console.log("Email:", contactEmail);
+    console.log("Message:", contactMessage);
+    alert("Thank you! Your message has been sent.");
+    contactName = '';
+    contactEmail = '';
+    contactMessage = '';
+  }
 </script>
 
-<nav class="nav-bar">
-  <div class="brand">CowlibrateAI</div>
-  <ul class="nav-links">
-    <li><button on:click={() => scrollToSection(heroRef)}>Home</button></li>
-    <li><button on:click={() => scrollToSection(featuresRef)}>Features</button></li>
-    <li><button on:click={() => scrollToSection(testimonialsRef)}>Testimonials</button></li>
-    <li><button on:click={() => scrollToSection(pricingRef)}>Pricing</button></li>
-    <li><button on:click={() => scrollToSection(investorsRef)}>Investors</button></li>
-    <li><button on:click={() => scrollToSection(aboutRef)}>About</button></li>
-    <li><button class="nav-cta-btn" on:click={() => goto('/dashboard/registration')}>Registration</button></li>
-  </ul>
-</nav>
-
-<main class="container">
-  <section bind:this={heroRef} class="hero">
-    <div class="hero-text">
-      <h1>{displayedText}</h1>
-      <p>Revolutionize your dairy operations with real-time monitoring and intelligent insights.</p>
-      <button class="cta-btn" on:click={() => goto('/dashboard/registration')}>
-        Join the Moovement
-        <Icon icon="mdi:arrow-right" style="margin-left: 0.6rem; width: 1.25rem; height: 1.25rem;" />
-      </button>
+<!-- Dark page wrapper -->
+<div class="dark-page">
+  <!-- Top Navigation -->
+  <Header company="CowlibrateAI" class="nav-bar">
+    <HeaderNav>
+      <HeaderNavItem on:click={() => scrollToSection('About')}>About</HeaderNavItem>
+      <HeaderNavItem on:click={() => scrollToSection('Features')}>Features</HeaderNavItem>
+      <HeaderNavItem on:click={() => scrollToSection('Contact')}>Contact</HeaderNavItem>
+      <HeaderNavItem on:click={() => scrollToSection('FAQ')}>FAQ</HeaderNavItem>
+    </HeaderNav>
+    <div class="auth-buttons">
+      <Button kind="tertiary" size="sm" on:click={() => goto('/dashboard/Login')}>Login</Button>
+      <Button kind="primary" size="sm" on:click={() => goto('/dashboard/registration')}>Register</Button>
     </div>
-  </section>
+  </Header>
 
-  <section bind:this={featuresRef} class="features">
-    {#each features as { title, description, icon }}
-      <article class="feature-card">
-        <Icon icon={icon} class="feature-icon" />
-        <h3>{title}</h3>
-        <p>{description}</p>
-      </article>
-    {/each}
-  </section>
+  <main class="container">
+    <!-- About -->
+    <section id="About" class="info-section">
+      {#each infoItems as { title, content }}
+        <div class="info-item">
+          <h2>{title}</h2>
+          <p>{content}</p>
+        </div>
+      {/each}
+    </section>
 
+    <!-- Features -->
+    <section id="Features" class="features-section">
+      {#each features as { title, description }}
+        <div class="feature-item">
+          <h2>{title}</h2>
+          <p>{description}</p>
+        </div>
+      {/each}
+    </section>
 
+    <!-- FAQ Section -->
+    <section id="FAQ" class="faq-section">
+      <h1 class="faq-title">Frequently Asked Questions</h1>
+      {#each faqs as faq, i}
+        <div class="faq-item">
+          <button class="faq-question" on:click={() => toggleFAQ(i)}>
+            {faq.question}
+            <span class="arrow">{faq.open ? "▲" : "▼"}</span>
+          </button>
+          {#if faq.open}
+            <div class="faq-answer">
+              <p>{faq.answer}</p>
+            </div>
+          {/if}
+        </div>
+      {/each}
+    </section>
 
+    <!-- Contact Form -->
+    <section id="Contact" class="contact-section">
+      <Form on:submit={submitContactForm} class="contact-form">
+        <FormGroup legendText="Contact Us">
+          <div class="form-item">
+            <TextInput bind:value={contactName} id="name" labelText="Name" placeholder="Your full name" required />
+          </div>
 
+          <div class="form-item">
+            <TextInput bind:value={contactEmail} id="email" type="email" labelText="Email" placeholder="Your email address" required />
+          </div>
 
-  <section bind:this={investorsRef} class="investors">
-    <h2>Backed By</h2>
-    <div class="investor-logos">
-      <img src="" alt="VC Firm 1" />
-      <img src="" alt="VC Firm 2" />
-    </div>
-  </section>
+          <div class="form-item">
+            <TextArea bind:value={contactMessage} id="message" labelText="Message" placeholder="Write your message here..." rows="4" required />
+          </div>
 
-  <section bind:this={aboutRef} class="about">
-    <h2>About CowlibrateAI</h2>
-    <p>Founded in 2024, we are dedicated to making dairy farming smarter and more sustainable through AI-powered solutions.</p>
-    <p>Our mission is to empower farmers with tools that optimize herd health, improve productivity, and reduce environmental impact.</p>
-  </section>
-</main>
+          <div class="form-button">
+            <Button type="submit">Send Message</Button>
+          </div>
+        </FormGroup>
+      </Form>
+    </section>
+  </main>
 
-<footer class="footer">
-  © {new Date().getFullYear()} CowlibrateAI. All rights reserved.
-</footer>
+  <footer class="footer">
+    © {new Date().getFullYear()} CowlibrateAI. All rights reserved.
+  </footer>
+</div>
 
 <style>
-  :global(body) {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background: white;
-    color: #111;
+  .dark-page {
+    background: linear-gradient(180deg, #0d0d0d 0%, #1e1e1e 100%);
+    color: #e0e0e0;
+    min-height: 100vh;
     scroll-behavior: smooth;
+    font-family: 'IBM Plex Sans', sans-serif;
+    line-height: 1.6;
   }
-  .nav-bar {
-    position: fixed;
-    top: 0;
+
+  .auth-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-right: 1rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 3rem auto;
+    padding: 0 1rem;
+  }
+
+  .info-section, .features-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem 0;
+  }
+
+  .info-item h2, .feature-item h2 {
+    margin-bottom: 0.5rem;
+    color: #fff;
+  }
+
+  .info-item p, .feature-item p {
+    color: #bbb;
+    margin: 0;
+  }
+
+  .faq-section {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+  }
+
+  .faq-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid #444;
+    padding: 1rem 0;
+  }
+
+  .faq-question {
     width: 100%;
-    background: #000;
-    color: white;
+    text-align: left;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 3rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
-    z-index: 999;
+    padding: 0.5rem 0;
+    color: #e0e0e0;
   }
-  .brand {
-    font-weight: 700;
-    font-size: 1.5rem;
-    letter-spacing: 1.2px;
+
+  .faq-question:hover {
+    color: #4fc3f7;
   }
-  .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 1rem;
-    margin: 0;
-    padding: 0;
-  }
-  .nav-links button, .nav-cta-btn {
-    background: transparent;
-    border: none;
-    color: white;
-    cursor: pointer;
+
+  .faq-answer {
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+    color: #ccc;
     font-size: 1rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    transition: background-color 0.25s ease;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .arrow {
+    font-size: 0.9rem;
+    transition: transform 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Contact form spacing */
+  .contact-section {
+    margin-top: 3rem;
+    padding: 2rem 0;
+  }
+
+  .form-item {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-button {
+    margin-top: 1.5rem;
     display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .nav-links button:hover, .nav-cta-btn:hover {
-    background-color: #444;
-  }
-  .container {
-    max-width: 1100px;
-    margin: 6rem auto 3rem;
-    padding: 0 2rem;
-  }
-  .hero {
-    text-align: center;
-    padding: 6rem 0 4rem;
-  }
-  .hero h1 {
-    font-size: 3.2rem;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-  }
-  .hero p {
-    font-size: 1.3rem;
-    margin-top: 1rem;
-    color: #222;
-  }
-  .cta-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 2rem auto 0;
-    padding: 0.75rem 1.5rem;
-    background: black;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  .cta-btn:hover {
-    background: #222;
+    justify-content: flex-end;
   }
 
   .footer {
-    background: #000;
-    color: white;
+    background: #121212;
+    color: #aaa;
     text-align: center;
     padding: 2rem 1rem;
     font-size: 0.9rem;
+    margin-top: 3rem;
   }
 </style>

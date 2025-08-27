@@ -10,49 +10,64 @@
   } from 'carbon-components-svelte';
   import { goto } from '$app/navigation';
 
-  let bovines = [{ id: 1, milk_yield: '', health: '', breed: '', lactation_stage: '', age: '' }];
-  let feeds = [{ feed_type: '', feed_quantity: '', feed_percentage: '' }];
-  let selectedCows = [];
+  let bovines = [
+    { id: 1, milk_yield: '', health: '', breed: '', lactation_stage: '', age: '' }
+  ];
+  let feeds = [
+    { feed_type: '', feed_quantity: '', feed_percentage: '' }
+  ];
+  let selectedBovines = [];
   let success = false;
   let error = false;
 
   function addBovine() {
-    bovines = [...bovines, { id: bovines.length + 1, milk_yield: '', health: '', breed: '', lactation_stage: '', age: '' }];
+    bovines = [
+      ...bovines,
+      { id: bovines.length + 1, milk_yield: '', health: '', breed: '', lactation_stage: '', age: '' }
+    ];
   }
 
   function addFeed() {
-    feeds = [...feeds, { feed_type: '', feed_quantity: '', feed_percentage: '' }];
+    feeds = [
+      ...feeds,
+      { feed_type: '', feed_quantity: '', feed_percentage: '' }
+    ];
   }
 
   async function submitData() {
-    success = false;
-    error = false;
+  success = false;
+  error = false;
 
-    const input = { bovines, feeds };
-    try {
-      const res = await fetch('http://localhost:8080/api/optimize', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(input)
-      });
+  const input = { bovines, feeds };
 
-      if (res.ok) {
-        const data = await res.json();
-        selectedCows = data.selected_cows;
-        success = true;
+  try {
+    const token = localStorage.getItem("token"); // grab JWT from storage
+    const res = await fetch("http://localhost:8080/api/optimize", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}` // 🔑 include JWT
+      },
+      body: JSON.stringify(input)
+    });
 
-        // Delay before navigating
-        setTimeout(() => {
-          goto('/dashboard/results');
-        }, 2000);
-      } else {
-        error = true;
-      }
-    } catch (err) {
-      console.error(err);
+    if (res.ok) {
+      const data = await res.json();
+      selectedBovines = data.selected_bovines || [];
+      success = true;
+
+      setTimeout(() => {
+        goto("/dashboard/results");
+      }, 2000);
+    } else {
       error = true;
     }
+  } catch (err) {
+    console.error(err);
+    error = true;
   }
+}
+
 
   function navigateTo(path) {
     goto(path);
@@ -71,7 +86,7 @@
 
   <Form>
     <h2>Bovines</h2>
-    {#each bovines as b, i}
+    {#each bovines as b}
       <FormGroup legendText="Bovine Entry" class="form-group">
         <NumberInput label="Milk Yield" min="0" bind:value={b.milk_yield} />
         <TextInput labelText="Health" placeholder="Health Status" bind:value={b.health} />
@@ -83,7 +98,7 @@
     <Button kind="ghost" on:click={addBovine}>➕ Add Bovine</Button>
 
     <h2 style="margin-top: 2rem;">Feeds</h2>
-    {#each feeds as f, i}
+    {#each feeds as f}
       <FormGroup legendText="Feed Entry" class="form-group">
         <TextInput labelText="Feed Type" placeholder="e.g. Hay" bind:value={f.feed_type} />
         <NumberInput label="Feed Quantity" min="0" bind:value={f.feed_quantity} />
@@ -115,12 +130,17 @@
     {/if}
   </Form>
 
-  {#if selectedCows.length > 0}
+  {#if selectedBovines.length > 0}
     <section class="results">
-      <h2>Selected Cows</h2>
+      <h2>Selected Bovines</h2>
       <ul>
-        {#each selectedCows as cow}
-          <li><strong>ID:</strong> {cow.id}, <strong>Breed:</strong> {cow.breed}, <strong>Milk Yield:</strong> {cow.milk_yield}, <strong>Health:</strong> {cow.health}</li>
+        {#each selectedBovines as b}
+          <li>
+            <strong>ID:</strong> {b.id},
+            <strong>Breed:</strong> {b.breed},
+            <strong>Milk Yield:</strong> {b.milk_yield},
+            <strong>Health:</strong> {b.health}
+          </li>
         {/each}
       </ul>
     </section>

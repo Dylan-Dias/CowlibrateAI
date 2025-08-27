@@ -16,51 +16,48 @@
   let loginError = '';
   let loginSuccess = false;
 
-  async function handleLoginSubmit(event) {
-    event.preventDefault();
-    await login();
-  }
-
-  async function login() {
+  async function handleLogin(event) {
+    event.preventDefault(); // stop page refresh
     loginError = '';
     loginSuccess = false;
 
     try {
-      const res = await fetch('http://localhost:8080/api/login', {  // adjust origin if needed
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+      const res = await fetch("http://localhost:8080/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
       });
 
-      // Try to parse JSON response safely
-      let data;
-      try {
-        data = await res.json();
-      } catch {
-        loginError = 'Unexpected server response.';
+      const data = await res.json();
+
+      if (!res.ok) {
+        loginError = data.message || "Login failed";
         return;
       }
 
-      if (res.ok && data.token) {
-        localStorage.setItem('token', data.token);
-        loginSuccess = true;
-        username = '';
-        password = '';
+      localStorage.setItem("token", data.token);
+      loginSuccess = true;
 
-        // Redirect based on role (make sure backend sends role)
-        if (data.role === 'goat') {
-          goto('/dashboard/goat');
-        } else if (data.role === 'cow') {
-          goto('/dashboard/cow');
+      if (data.success) {
+        // ✅ Route based on role
+        if (data.role === "goat") {
+          goto("/dashboard/GoatAnalytics");
+        } else if (data.role === "cow") {
+          goto("/dashboard/CowAnalytics");
         } else {
-          goto('/');  // fallback
+          goto("/dashboard"); // fallback
         }
       } else {
-        loginError = data.message || 'Login failed. Please check your credentials.';
+        loginError = data.message || "Invalid login";
       }
     } catch (err) {
-      loginError = 'Network error or server not reachable.';
+      loginError = "Something went wrong";
+      console.error(err);
     }
+  }
+
+  function handleForgotPassword() {
+    goto('/dashboard/ResetPassword');
   }
 </script>
 
@@ -75,7 +72,7 @@
     <InlineNotification title="Login Failed" subtitle={loginError} kind="error" />
   {/if}
 
-  <Form on:submit={handleLoginSubmit}>
+  <Form on:submit={handleLogin}>
     <FormGroup legendText="Access your account">
       <TextInput
         labelText="Username"
@@ -91,7 +88,12 @@
         required
       />
 
-      <Button type="submit" kind="primary">Login</Button>
+      <div class="button-group">
+        <Button type="submit" kind="primary" size="sm">Login</Button>
+        <Button kind="tertiary" type="button" size="sm" on:click={handleForgotPassword}>
+          Forgot Password?
+        </Button>
+      </div>
     </FormGroup>
   </Form>
 </main>
@@ -119,11 +121,35 @@
     gap: 1.5rem;
   }
 
-  :global(.bx--btn) {
+  :global(.bx--inline-notification) {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Fix PasswordInput eyeball alignment */
+  :global(.bx--password-input .bx--text-input__field-wrapper) {
+    display: flex;
+    align-items: center;
+  }
+
+  :global(.bx--password-input .bx--text-input) {
+    flex: 1;
+  }
+
+  :global(.bx--password-input__visibility__toggle) {
+    margin-left: 0.5rem;
+  }
+
+  /* Buttons side by side + smaller */
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
     margin-top: 1rem;
   }
 
-  :global(.bx--inline-notification) {
-    margin-bottom: 1.5rem;
+  :global(.bx--btn) {
+    min-width: auto;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
   }
 </style>

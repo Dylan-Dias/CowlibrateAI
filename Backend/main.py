@@ -1,203 +1,112 @@
-from fastapi import FastAPI, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import List
-import asyncpg
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import psycopg2
 import bcrypt
 import jwt
 import datetime
-import json
-import pulp  # import pulp as a whole for solver cmd access
-from pulp import LpProblem, LpMaximize, LpVariable, lpSum, value
+from flask_mail import Mail, Message
 
 
-JWT_SECRET = "your_secret_key_here"
+app = Flask(__name__)
+CORS(app)
 
-app = FastAPI()
+JWT_SECRET = "800f985c9c3224c035a901222c801cd6"
 
-# ===== CORS =====
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+def get_db_connection():
+    return psycopg2.connect(
+        dbname="CowlibrateAI",
+        user="postgres",
+        password="root",
+        host="localhost"
+    )
 
-# ===== Database =====
-async def get_db():
-    return await asyncpg.connect("postgres://postgres:root@localhost:5432/CowlibrateAI")
+@app.route("/register", methods=["POST"])
+def register():
+    data = request.get_json()
+    username = data.get("username")
+    email = data.get("email")
+    password = data.get("password")
+    role = data.get("role", "user")  # default role if not provided
 
-# ===== Models =====
-class User(BaseModel):
-    username: str
-    email: str
-    password: str
-    role: str
+    if not username or not email or not password:
+        return jsonify({"error": "Missing fields"}), 400
 
-class Credentials(BaseModel):
-    username: str
-    password: str
-
-class Animal(BaseModel):
-    id: int | None = None
-    milk_yield: float
-    health: str
-    breed: str
-    lactation_stage: str
-    age: int
-
-class Feed(BaseModel):
-    feed_type: str
-    feed_quantity: float
-    feed_percentage: float
-
-class OptimizeRequest(BaseModel):
-    goats: List[Animal]
-    bovines: List[Animal]
-    feeds: List[Feed]
-
-# ===== User Routes =====
-@app.post("/api/register")
-async def register(user: User):
-    if not all([user.username, user.email, user.password, user.role]):
-        raise HTTPException(400, "Missing required fields")
-
-    hashed_pw = bcrypt.hashpw(user.password.encode(), bcrypt.gensalt()).decode()
-
-    conn = await get_db()
     try:
-        await conn.execute("""
-            INSERT INTO users (username, email, password, role)
-            VALUES ($1, $2, $3, $4)
-        """, user.username, user.email, hashed_pw, user.role)
-    finally:
-        await conn.close()
+        hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-    return {"message": "User registered successfully"}
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO users (username, email, password_hash, role) VALUES (%s, %s, %s, %s)",
+            (username, email, hashed.decode('utf-8'), role)
+        )
+        conn.commit()
+        cur.close()
+        conn.close()
+        return jsonify({"message": "User registered successfully!"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-@app.post("/api/login")
-async def login(creds: Credentials):
-    if not creds.username or not creds.password:
-        raise HTTPException(400, "Missing credentials")
+@app.route("/logout", methods=["POST"])
+def logout():
+    # If you wanted server-side token invalidation, you'd handle it here
+    return jsonify({"message": "Logout successful"}), 200
 
-    conn = await get_db()
-    try:
-        row = await conn.fetchrow("SELECT password, role FROM users WHERE username=$1", creds.username)
-    finally:
-        await conn.close()
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    username = data.get("username")
+    password = data.get("password")
 
-    if not row or not bcrypt.checkpw(creds.password.encode(), row["password"].encode()):
-        raise HTTPException(401, "Invalid credentials")
+    if not username or not password:
+        return jsonify({"error": "Missing fields"}), 400
 
-    payload = {
-        "username": creds.username,
-        "role": row["role"],
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=24),
-        "iat": datetime.datetime.utcnow(),
-    }
-    token = jwt.encode(payload, JWT_SECRET, algorithm="HS256")
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT id, password_hash, role FROM users WHERE username = %s", (username,))
+    user = cur.fetchone()
+    cur.close()
+    conn.close()
 
-    return {"token": token, "role": row["role"]}
+    if not user:
+        return jsonify({"error": "Invalid username or password"}), 401
 
-# ===== Insert cows/goats + feeds =====
-@app.post("/api/optimize")
-async def optimize_insert(req: OptimizeRequest):
-    conn = await get_db()
-    try:
-        # Goats
-        for g in req.goats:
-            goat_id = await conn.fetchval("""
-                INSERT INTO goat_entries (milk_yield, health, breed, lactation_stage, age)
-                VALUES ($1, $2, $3, $4, $5) RETURNING id
-            """, g.milk_yield, g.health, g.breed, g.lactation_stage, g.age)
+    user_id, password_hash, role = user
 
-            for f in req.feeds:
-                await conn.execute("""
-                    INSERT INTO goat_feeds (goat_entry_id, feed_type, feed_quantity, feed_percentage)
-                    VALUES ($1, $2, $3, $4)
-                """, goat_id, f.feed_type, f.feed_quantity, f.feed_percentage)
-
-        # Bovines
-        for c in req.bovines:
-            cow_id = await conn.fetchval("""
-                INSERT INTO cow_entries (milk_yield, health, breed, lactation_stage, age)
-                VALUES ($1, $2, $3, $4, $5) RETURNING id
-            """, c.milk_yield, c.health, c.breed, c.lactation_stage, c.age)
-
-            for f in req.feeds:
-                await conn.execute("""
-                    INSERT INTO cow_feeds (cow_entry_id, feed_type, feed_quantity, feed_percentage)
-                    VALUES ($1, $2, $3, $4)
-                """, cow_id, f.feed_type, f.feed_quantity, f.feed_percentage)
-    finally:
-        await conn.close()
-
-    return {"message": "Optimization and storage complete"}
-
-# ===== Optimization Algorithm =====
-def run_optimization(bovines: List[dict], feeds: List[dict]):
-    if not bovines:
-        return []
-
-    feed_impact = {
-        f['feed_type']: 1 + (f['feed_percentage'] / 100) * 0.1
-        for f in feeds
-    }
-
-    prob = LpProblem("Maximize Milk Yield", LpMaximize)
-    cow_vars = {
-        cow['id']: LpVariable(f"cow_{cow['id']}", cat='Binary')
-        for cow in bovines
-    }
-
-    prob += lpSum([
-        cow_vars[cow['id']] * cow['milk_yield'] * feed_impact.get(cow['breed'], 1.0)
-        for cow in bovines
-    ])
-
-    prob += lpSum([cow_vars[cow['id']] for cow in bovines]) <= 10
-    prob += lpSum([
-        cow_vars[cow['id']] * (1 if cow['health'].lower() == 'healthy' else 0)
-        for cow in bovines
-    ]) >= 1
-
-    prob.solve(pulp.PULP_CBC_CMD(msg=False))
-
-    selected = [
-        {
-            'id': cow['id'],
-            'milk_yield': cow['milk_yield'],
-            'health': cow['health'],
-            'breed': cow['breed'],
-            'lactation_stage': cow['lactation_stage'],
-            'age': cow['age']
-        }
-        for cow in bovines
-        if value(cow_vars[cow['id']]) == 1
-    ]
-
-    return selected
-
-# ===== API to fetch + optimize =====
-@app.get("/api/optimize-run/{animal_type}")
-async def optimize_run(animal_type: str):
-    if animal_type == "cows":
-        entries_table, feeds_table = "cow_entries", "cow_feeds"
-    elif animal_type == "goats":
-        entries_table, feeds_table = "goat_entries", "goat_feeds"
+    if bcrypt.checkpw(password.encode('utf-8'), password_hash.encode('utf-8')):
+        token = jwt.encode(
+            {"user_id": user_id, "role": role, "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
+            JWT_SECRET,
+            algorithm="HS256"
+        )
+        return jsonify({
+            "success": True,
+            "message": "Login successful",
+            "user_id": user_id,
+            "role": role,
+            "token": token
+        })
     else:
-        raise HTTPException(400, "Invalid animal type")
+        return jsonify({"error": "Invalid username or password"}), 401
 
-    conn = await get_db()
-    try:
-        animals = await conn.fetch(f"SELECT id, milk_yield, health, breed, lactation_stage, age FROM {entries_table}")
-        feeds = await conn.fetch(f"SELECT feed_type, feed_quantity, feed_percentage FROM {feeds_table}")
-    finally:
-        await conn.close()
+app.config['MAIL_SERVER'] = 'smtp.mailtrap.io'
+app.config["MAIL_PORT"] = 587
+app.config['MAIL_USERNAME'] = 'smtp@mailtrap.io'
+app.config['MAIL_PASSWORD'] = '1f8d6cfb234bb2a408d1c13001902a58'
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False 
 
-    animals = [dict(a) for a in animals]
-    feeds = [dict(f) for f in feeds]
+mail = Mail(app)
 
-    result = run_optimization(animals, feeds)
-    return {"selected_cows": result}
+@app.route("/send-email")
+def send_email():
+    msg = Message(
+        subject="Hello from Mailtrap",
+        sender="dylandias960@yahoo.com",
+        recipients=['ddias@drew.edu'],
+        body="This is a test email sent via Mailtrap"
+    )
+    mail.send(msg)
+    return "Email Sent!"
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=8080, debug=True)
