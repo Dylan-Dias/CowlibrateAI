@@ -117,6 +117,10 @@ def send_reset_email(user_email):
 # -------------------------
 # Auth Routes
 # -------------------------
+@app.route("/")
+def index():
+    return "CowlibrateAI backend is running", 200
+
 @app.route("/register", methods=["POST"])
 def register():
     data = request.get_json() or {}
