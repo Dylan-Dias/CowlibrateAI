@@ -51,8 +51,10 @@ app.config.update(
 )
 mail = Mail(app)
 
-# Rate limiter for DDOS / Brute Forcing
-limiter = Limiter(get_remote_address, app=app)
+limiter = Limiter(
+    key_func=get_remote_address,  # specify key_func explicitly
+    app=app
+)
 
 # -------------------------
 # Database helper
