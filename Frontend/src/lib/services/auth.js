@@ -1,7 +1,7 @@
 import { authStore } from "$lib/stores/auth";
 import { browser } from "$app/environment";
 
-const API_URL = "https://cowlibrate-backend.onrender.com";
+const API_URL = "https://cowlibrate-backend.onrender.com"; // your actual backend URL
 
 /* -------------------------------------------------
     Helper: Fetch Wrapper with Automatic Token
@@ -67,6 +67,7 @@ export async function register(username, email, password, role = "user") {
 export async function login(username, password) {
   const data = await safeFetch(`${API_URL}/login`, {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
   });
 
