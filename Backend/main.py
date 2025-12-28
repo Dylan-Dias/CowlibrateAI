@@ -33,17 +33,9 @@ if not JWT_SECRET or not DATABASE_URL:
 # Flask setup
 # -------------------------
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:5174",
-    "http://localhost:8080",
-    "http://127.0.0.1:8080",
-    "http://localhost:5000",
-    "http://127.0.0.1:5000"
-], "allow_headers": ["Content-Type", "Authorization"]}})
-
-
+FRONTEND_URLS = os.environ.get("FRONTEND_URLS", "")
+origins = FRONTEND_URLS.split(",") if FRONTEND_URLS else []
+CORS(app, resources={r"/*": {"origins": origins}})
 # Logging
 logging.basicConfig(level=logging.INFO)
 
