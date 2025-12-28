@@ -2,4 +2,4 @@ Flask==2.3.3
 flask-cors==3.0.10
 gunicorn==21.2.0
 openpyxl==3.1.2  # if you parse Excel
-pandas==2.1.0     # optional
+
