@@ -1,7 +1,7 @@
 import { authStore } from "$lib/stores/auth";
 import { browser } from "$app/environment";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8080";
+const API_URL = "https://cowlibrate-backend.onrender.com";
 
 /* -------------------------------------------------
     Helper: Fetch Wrapper with Automatic Token
