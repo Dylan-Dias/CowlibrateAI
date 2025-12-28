@@ -1,5 +1,11 @@
 Flask==2.3.3
 flask-cors==3.0.10
 gunicorn==21.2.0
-openpyxl==3.1.2  # if you parse Excel
+openpyxl==3.1.2
 python-dotenv==1.0.0
+bcrypt==4.1.1
+PyJWT==2.8.0
+psycopg2-binary==2.9.9
+Flask-Mail==0.9.1
+Flask-Limiter==2.11.1
+itsdangerous==2.1.2
