@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 
 import bcrypt
 import jwt
-import psycopg2
-import psycopg2.extras
+import psycopg
+from psycopg import rows
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_mail import Mail
@@ -58,7 +58,7 @@ limiter = Limiter(get_remote_address, app=app)
 # Database helper
 # -------------------------
 def get_db_connection():
-    return psycopg2.connect(DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor)
+        return psycopg.connect(DATABASE_URL, row_factory=rows.dict_row)
 
 # -------------------------
 # JWT auth decorator
@@ -291,7 +291,10 @@ def contact():
 @token_required
 def get_submissions(user_id):
     conn = get_db_connection()
-    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur = conn.cursor()  # row_factory is already set in connection
+    cur.execute("SELECT * FROM submissions WHERE user_id = %s", (user_id,))
+    results = cur.fetchall()  # each row is a dict
+
 
     cur.execute(
         "SELECT id, bovines, feeds FROM submissions WHERE user_id = %s ORDER BY id DESC",
