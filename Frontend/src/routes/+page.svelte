@@ -11,27 +11,23 @@
     FormGroup
   } from "carbon-components-svelte";
 
-  // Information Tab Data
-const infoItems = [
-  {
-    title: "About CowlibrateAI",
-    content: "CowlibrateAI is a specialized web application platform that collaborates with local and foreign farms to provide exceptional software at an affordable cost. Our goal is to assist farmers and individuals in the agriculture industry by offering this cutting edge application that streamlines dairy operations."
-  },
-  {
-    title: "Contact Information",
-    content: "Reach out to us via email, phone, or contact form for personalized consultations and support."
-  }
-];
+  // Information Section
+  const infoItems = [
+    {
+      title: "CowlibrateAI",
+      content:
+        "CowlibrateAI is a specialized platform that partners with local and international dairy farms to provide intelligent, data-driven solutions. Using AI and analytics, it helps farmers optimize Herd Management, Feeding, and Environmental Conditions, enabling them to maximize milk production while minimizing affordable costs"
+    }
+  ];
 
-
-  // Features Data
+  // Features Section
   const features = [
     { title: "Health & Nutrition Insights", description: "Optimize feeding and health management using AI-driven recommendations." },
     { title: "Farm Efficiency Analytics", description: "Streamline operations and boost productivity with data-backed decisions." },
     { title: "Future Work", description: "Computer Vision to help find patterns in cow birth defects or deficiencies for LLMs and AI work." }
   ];
 
-  // FAQ Data
+  // FAQ Section
   let faqs = [
     { question: "What is CowlibrateAI?", answer: "It’s an AI system to maximize dairy production.", open: false },
     { question: "Who can use it?", answer: "Farmers looking to improve efficiency and productivity.", open: false },
@@ -49,27 +45,49 @@ const infoItems = [
   let contactName = '';
   let contactEmail = '';
   let contactMessage = '';
+  let sending = false; // Loading state
+
+  async function submitContactForm(event) {
+    event.preventDefault();
+    sending = true;
+
+    try {
+      const res = await fetch("http://localhost:8080/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: contactName,
+          email: contactEmail,
+          message: contactMessage
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("Thank you! Your message has been sent.");
+        contactName = '';
+        contactEmail = '';
+        contactMessage = '';
+      } else {
+        alert("Error sending message: " + data.error);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("An unexpected error occurred.");
+    } finally {
+      sending = false;
+    }
+  }
 
   function scrollToSection(id) {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   }
-
-  function submitContactForm(event) {
-    event.preventDefault();
-    console.log("Name:", contactName);
-    console.log("Email:", contactEmail);
-    console.log("Message:", contactMessage);
-    alert("Thank you! Your message has been sent.");
-    contactName = '';
-    contactEmail = '';
-    contactMessage = '';
-  }
 </script>
 
-<!-- Dark page wrapper -->
+<!-- Dark Page Layout -->
 <div class="dark-page">
-  <!-- Top Navigation -->
+  <!-- Header Navigation -->
   <Header company="CowlibrateAI" class="nav-bar">
     <HeaderNav>
       <HeaderNavItem on:click={() => scrollToSection('About')}>About</HeaderNavItem>
@@ -78,13 +96,13 @@ const infoItems = [
       <HeaderNavItem on:click={() => scrollToSection('FAQ')}>FAQ</HeaderNavItem>
     </HeaderNav>
     <div class="auth-buttons">
-      <Button kind="tertiary" size="sm" on:click={() => goto('/dashboard/Login')}>Login</Button>
-      <Button kind="primary" size="sm" on:click={() => goto('/dashboard/registration')}>Register</Button>
+      <Button kind="tertiary" size="sm" on:click={() => goto('/login')}>Login</Button>
+      <Button kind="primary" size="sm" on:click={() => goto('/registration')}>Register</Button>
     </div>
   </Header>
 
   <main class="container">
-    <!-- About -->
+    <!-- About Section -->
     <section id="About" class="info-section">
       {#each infoItems as { title, content }}
         <div class="info-item">
@@ -94,10 +112,10 @@ const infoItems = [
       {/each}
     </section>
 
-    <!-- Features -->
+    <!-- Features Section (Fades In) -->
     <section id="Features" class="features-section">
-      {#each features as { title, description }}
-        <div class="feature-item">
+      {#each features as { title, description }, i}
+        <div class="feature-item" style="animation-delay: {i * 0.4}s">
           <h2>{title}</h2>
           <p>{description}</p>
         </div>
@@ -122,24 +140,24 @@ const infoItems = [
       {/each}
     </section>
 
-    <!-- Contact Form -->
+    <!-- Contact Section -->
     <section id="Contact" class="contact-section">
       <Form on:submit={submitContactForm} class="contact-form">
         <FormGroup legendText="Contact Us">
           <div class="form-item">
             <TextInput bind:value={contactName} id="name" labelText="Name" placeholder="Your full name" required />
           </div>
-
           <div class="form-item">
             <TextInput bind:value={contactEmail} id="email" type="email" labelText="Email" placeholder="Your email address" required />
           </div>
-
           <div class="form-item">
             <TextArea bind:value={contactMessage} id="message" labelText="Message" placeholder="Write your message here..." rows="4" required />
           </div>
-
           <div class="form-button">
-            <Button type="submit">Send Message</Button>
+            <Button type="submit" disabled={sending}>
+              {#if sending}Sending...{/if}
+              {#if !sending}Send Message{/if}
+            </Button>
           </div>
         </FormGroup>
       </Form>
@@ -152,19 +170,13 @@ const infoItems = [
 </div>
 
 <style>
+  /* ========== Base Layout ========== */
   .dark-page {
-    background: linear-gradient(180deg, #0d0d0d 0%, #1e1e1e 100%);
+    background: linear-gradient(180deg, #000000 0%, #1e1e1e 100%);
     color: #e0e0e0;
     min-height: 100vh;
-    scroll-behavior: smooth;
     font-family: 'IBM Plex Sans', sans-serif;
-    line-height: 1.6;
-  }
-
-  .auth-buttons {
-    display: flex;
-    gap: 0.5rem;
-    margin-right: 1rem;
+    scroll-behavior: smooth;
   }
 
   .container {
@@ -173,23 +185,72 @@ const infoItems = [
     padding: 0 1rem;
   }
 
-  .info-section, .features-section {
+  .auth-buttons {
+    display: flex;
+    gap: 0.9rem;
+    margin-right: 1rem;
+  }
+
+  /* ========== Info Section ========== */
+  .info-section {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
     padding: 2rem 0;
   }
 
-  .info-item h2, .feature-item h2 {
+  .info-item:first-child h2 {
+    font-size: 8rem;
+    font-weight: 1000;
+    color: #fff;
+  }
+
+  .info-item h2 {
     margin-bottom: 0.5rem;
     color: #fff;
   }
 
-  .info-item p, .feature-item p {
+  .info-item p {
     color: #bbb;
-    margin: 0;
   }
 
+  /* ========== Feature Section (Fade In) ========== */
+  .features-section {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+  }
+
+  .feature-item {
+    opacity: 0;
+    transform: translateY(40px);
+    padding: 1.8rem;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+    animation: fadeInUp 0.9s ease forwards;
+  }
+
+  .feature-item:hover {
+    transform: translateY(-5px);
+  }
+
+  .feature-item h2 {
+    color: #fff;
+    font-size: 1.7rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .feature-item p {
+    color: #bbb;
+    font-size: 1.05rem;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ========== FAQ Section ========== */
   .faq-section {
     max-width: 800px;
     margin: 2rem auto;
@@ -209,16 +270,14 @@ const infoItems = [
 
   .faq-question {
     width: 100%;
-    text-align: left;
     background: none;
     border: none;
     font-size: 1.2rem;
+    color: #e0e0e0;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 0;
-    color: #e0e0e0;
   }
 
   .faq-question:hover {
@@ -229,13 +288,7 @@ const infoItems = [
     margin-top: 0.5rem;
     padding-left: 1rem;
     color: #ccc;
-    font-size: 1rem;
     animation: fadeIn 0.3s ease-in-out;
-  }
-
-  .arrow {
-    font-size: 0.9rem;
-    transition: transform 0.2s ease;
   }
 
   @keyframes fadeIn {
@@ -243,7 +296,7 @@ const infoItems = [
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Contact form spacing */
+  /* ========== Contact Section ========== */
   .contact-section {
     margin-top: 3rem;
     padding: 2rem 0;
@@ -259,6 +312,7 @@ const infoItems = [
     justify-content: flex-end;
   }
 
+  /* ========== Footer ========== */
   .footer {
     background: #121212;
     color: #aaa;

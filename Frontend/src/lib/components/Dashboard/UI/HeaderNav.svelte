@@ -1,0 +1,27 @@
+<script>
+  import { Header, HeaderNav, HeaderNavItem, FileUploaderButton } from "carbon-components-svelte";
+  import { goto } from "$app/navigation";
+
+  export let onFileUpload = () => {};
+
+  function navigateTo(path) {
+    goto(path);
+  }
+</script>
+
+<Header company="Dairy Dashboard" platformName="Milk Yield">
+  <HeaderNav>
+    <HeaderNavItem on:click={() => navigateTo("/analytics")}>
+      Bovine Analytics
+    </HeaderNavItem>
+    <HeaderNavItem>
+      <FileUploaderButton
+        buttonLabel="Upload Excel"
+        accept={[".xlsx", ".xls"]}
+        multiple={false}
+        on:change={(e) => onFileUpload(e.detail.files)}
+      />
+    </HeaderNavItem>
+    
+  </HeaderNav>
+</Header>

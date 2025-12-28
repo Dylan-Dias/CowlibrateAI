@@ -5,13 +5,14 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "rollup -c",
+		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''"
 	},
 	"devDependencies": {
 		"@event-calendar/core": "^4.5.2",
 		"@sveltejs/adapter-auto": "^6.0.0",
+		"@sveltejs/adapter-vercel": "^6.2.0",
 		"@sveltejs/kit": "^2.22.2",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"svelte": "^5.0.0",
@@ -22,11 +23,19 @@
 		"@event-calendar/day-grid": "^3.12.0",
 		"@event-calendar/interaction": "^3.12.0",
 		"@event-calendar/time-grid": "^3.12.0",
+		"@fortawesome/free-solid-svg-icons": "^7.1.0",
+		"@shadcn/ui": "^0.0.4",
 		"apexcharts": "^4.7.0",
-		"carbon-components": "^10.58.15",
-		"carbon-components-svelte": "^0.89.4",
+		"carbon-components": "^10.59.2",
+		"carbon-components-svelte": "^0.95.2",
 		"html2canvas": "^1.4.1",
 		"jspdf": "^3.0.1",
-		"svelte-apexcharts": "^1.0.2"
-	}
+		"svelte-apexcharts": "^1.0.2",
+		"svelte-fa": "^4.0.4"
+	},
+	"description": "Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).",
+	"main": "svelte.config.js",
+	"keywords": [],
+	"author": "",
+	"license": "ISC"
 }
