@@ -21,7 +21,7 @@
     loading = true;
 
     try {
-      const res = await fetch('http://127.0.0.1:8080/forgot-password', {
+      const res = await fetch('https://cowlibrate.onrender.com/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
