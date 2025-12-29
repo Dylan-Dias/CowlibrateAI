@@ -566,8 +566,10 @@ def health_distribution(user_id):
             cur.execute("""
                 SELECT bovine->> 'health' AS health, COUNT(*) AS cnt
                 FROM submissions, jsonb_array_elements(COALESCE(bovines::jsonb, '[]'::jsonb)) AS bovine
+                WHERE user_id IN (<list of user_ids with data>)
                 GROUP BY health
-                ORDER BY cnt DESC
+                ORDER BY cnt DESC;
+
             """)
             rows = cur.fetchall()
         return jsonify({"labels": [r["health"] for r in rows], "series": [r["cnt"] for r in rows]}), 200
