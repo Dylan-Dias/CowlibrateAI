@@ -26,7 +26,7 @@
 
     loading = true;
     try {
-     const res = await fetch(`http://127.0.0.1:8080/reset-password/${token}`, {
+     const res = await fetch(`https://cowlibrate.onrender.com/reset-password${token}`, {
   method: "POST",
   headers: {
     "Content-Type": "application/json; charset=utf-8",
