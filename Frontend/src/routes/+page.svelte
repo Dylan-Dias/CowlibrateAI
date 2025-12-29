@@ -199,11 +199,12 @@
     padding: 2rem 0;
   }
 
-  .info-item:first-child h2 {
-    font-size: 8rem;
-    font-weight: 1000;
-    color: #fff;
-  }
+ .info-item:first-child h2 {
+  font-size: clamp(2rem, 8vw, 8rem);
+  font-weight: 1000;
+  color: #fff;
+}
+
 
   .info-item h2 {
     margin-bottom: 0.5rem;
