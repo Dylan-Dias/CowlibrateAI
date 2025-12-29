@@ -14,6 +14,10 @@
     <HeaderNavItem on:click={() => navigateTo("/analytics")}>
       Bovine Analytics
     </HeaderNavItem>
+      <HeaderNavItem on:click={() => navigateTo('/dbview')}>
+        Herd View
+    </HeaderNavItem>
+
     <HeaderNavItem>
       <FileUploaderButton
         buttonLabel="Upload Excel"
