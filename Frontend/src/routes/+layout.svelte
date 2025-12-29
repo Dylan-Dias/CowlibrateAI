@@ -6,4 +6,5 @@
 </script>
 
 <!-- Slot for rendering child components -->
+ 
 <slot />

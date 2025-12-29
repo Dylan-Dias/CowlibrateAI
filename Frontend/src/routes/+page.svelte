@@ -1,3 +1,69 @@
+<svelte:head>
+  <!-- Primary SEO -->
+  <title>CowlibrateAI | AI-Powered Dairy Farm Optimization</title>
+  <meta
+    name="description"
+    content="CowlibrateAI is an AI-powered platform helping dairy farms optimize herd health, nutrition, and milk production using data-driven analytics."
+  />
+  <link rel="canonical" href="https://cowlibrate.ai/" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="CowlibrateAI | AI-Powered Dairy Farm Optimization" />
+  <meta
+    property="og:description"
+    content="AI-driven analytics for dairy herd health, nutrition, and milk production optimization."
+  />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://cowlibrate.ai/" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="CowlibrateAI" />
+  <meta
+    name="twitter:description"
+    content="Affordable AI tools for dairy farm efficiency and milk production optimization."
+  />
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is CowlibrateAI?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "CowlibrateAI is an AI-powered platform designed to help dairy farms improve herd health, nutrition, and milk production."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who can use CowlibrateAI?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Dairy farmers and agricultural professionals looking to improve efficiency and productivity."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is CowlibrateAI affordable?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. It is designed for farms that cannot afford expensive dairy parlor systems."
+          }
+        }
+      ]
+    }
+  </script>
+</svelte:head>
+
 <script>
   import { goto } from '$app/navigation';
   import {
@@ -9,29 +75,45 @@
     TextArea,
     Form,
     FormGroup
-  } from "carbon-components-svelte";
+  } from 'carbon-components-svelte';
 
-  // Information Section
-  const infoItems = [
+  const features = [
     {
-      title: "CowlibrateAI",
-      content:
-        "CowlibrateAI is a specialized platform that partners with local and international dairy farms to provide intelligent, data-driven solutions. Using AI and analytics, it helps farmers optimize Herd Management, Feeding, and Environmental Conditions, enabling them to maximize milk production while minimizing affordable costs"
+      title: 'Health & Nutrition Insights',
+      description:
+        'Optimize feeding strategies and herd health using AI-driven recommendations.'
+    },
+    {
+      title: 'Farm Efficiency Analytics',
+      description:
+        'Make data-backed decisions to streamline operations and increase productivity.'
+    },
+    {
+      title: 'Future Work',
+      description:
+        'Computer vision models to detect cow health deficiencies and birth defects.'
     }
   ];
 
-  // Features Section
-  const features = [
-    { title: "Health & Nutrition Insights", description: "Optimize feeding and health management using AI-driven recommendations." },
-    { title: "Farm Efficiency Analytics", description: "Streamline operations and boost productivity with data-backed decisions." },
-    { title: "Future Work", description: "Computer Vision to help find patterns in cow birth defects or deficiencies for LLMs and AI work." }
-  ];
-
-  // FAQ Section
   let faqs = [
-    { question: "What is CowlibrateAI?", answer: "It’s an AI system to maximize dairy production.", open: false },
-    { question: "Who can use it?", answer: "Farmers looking to improve efficiency and productivity.", open: false },
-    { question: "Is it affordable?", answer: "Yes, designed for farmers who cannot afford dairy parlors.", open: false }
+    {
+      question: 'What is CowlibrateAI?',
+      answer:
+        'CowlibrateAI is an AI-powered platform designed to help dairy farms optimize production and herd health.',
+      open: false
+    },
+    {
+      question: 'Who can use it?',
+      answer:
+        'Dairy farmers and agricultural professionals seeking better operational efficiency.',
+      open: false
+    },
+    {
+      question: 'Is it affordable?',
+      answer:
+        'Yes. It is designed specifically for farms that cannot afford expensive dairy parlors.',
+      open: false
+    }
   ];
 
   function toggleFAQ(index) {
@@ -41,20 +123,19 @@
     }));
   }
 
-  // Contact form state
   let contactName = '';
   let contactEmail = '';
   let contactMessage = '';
-  let sending = false; // Loading state
+  let sending = false;
 
   async function submitContactForm(event) {
     event.preventDefault();
     sending = true;
 
     try {
-      const res = await fetch("https://cowlibrate.onrender.com/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('https://cowlibrate.onrender.com/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: contactName,
           email: contactEmail,
@@ -62,75 +143,79 @@
         })
       });
 
-      const data = await res.json();
       if (res.ok) {
-        alert("Thank you! Your message has been sent.");
+        alert('Thank you! Your message has been sent.');
         contactName = '';
         contactEmail = '';
         contactMessage = '';
       } else {
-        alert("Error sending message: " + data.error);
+        alert('Error sending message.');
       }
     } catch (err) {
       console.error(err);
-      alert("An unexpected error occurred.");
+      alert('Unexpected error.');
     } finally {
       sending = false;
     }
   }
 
   function scrollToSection(id) {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   }
 </script>
 
-<!-- Dark Page Layout -->
 <div class="dark-page">
-  <!-- Header Navigation -->
-  <Header company="CowlibrateAI" class="nav-bar">
+  <Header company="CowlibrateAI">
     <HeaderNav>
-      <HeaderNavItem on:click={() => scrollToSection('About')}>About</HeaderNavItem>
-      <HeaderNavItem on:click={() => scrollToSection('Features')}>Features</HeaderNavItem>
-      <HeaderNavItem on:click={() => scrollToSection('Contact')}>Contact</HeaderNavItem>
-      <HeaderNavItem on:click={() => scrollToSection('FAQ')}>FAQ</HeaderNavItem>
+      <HeaderNavItem on:click={() => scrollToSection('about')}>About</HeaderNavItem>
+      <HeaderNavItem on:click={() => scrollToSection('features')}>Features</HeaderNavItem>
+      <HeaderNavItem on:click={() => scrollToSection('contact')}>Contact</HeaderNavItem>
+      <HeaderNavItem on:click={() => scrollToSection('faq')}>FAQ</HeaderNavItem>
     </HeaderNav>
     <div class="auth-buttons">
       <Button kind="tertiary" size="sm" on:click={() => goto('/login')}>Login</Button>
-      <Button kind="primary" size="sm" on:click={() => goto('/registration')}>Register</Button>
+      <Button kind="primary" size="sm" on:click={() => goto('/registration')}>
+        Register
+      </Button>
     </div>
   </Header>
 
   <main class="container">
-    <!-- About Section -->
-    <section id="About" class="info-section">
-      {#each infoItems as { title, content }}
-        <div class="info-item">
-          <h2>{title}</h2>
-          <p>{content}</p>
-        </div>
+    <!-- ABOUT -->
+    <section id="about" class="info-section">
+      <h1 class="main-title">CowlibrateAI</h1>
+      <p class="subtitle">
+        AI-powered dairy farm management to optimize herd health, nutrition,
+        and milk production using advanced analytics.
+      </p>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="features-section">
+      {#each features as feature, i}
+        <article class="feature-item" style="animation-delay: {i * 0.3}s">
+          <h2>{feature.title}</h2>
+          <p>{feature.description}</p>
+        </article>
       {/each}
     </section>
 
-    <!-- Features Section (Fades In) -->
-    <section id="Features" class="features-section">
-      {#each features as { title, description }, i}
-        <div class="feature-item" style="animation-delay: {i * 0.4}s">
-          <h2>{title}</h2>
-          <p>{description}</p>
-        </div>
-      {/each}
-    </section>
+    <!-- FAQ -->
+    <section
+      id="faq"
+      class="faq-section"
+      itemscope
+      itemtype="https://schema.org/FAQPage"
+    >
+      <h2 class="faq-title">Frequently Asked Questions</h2>
 
-    <!-- FAQ Section -->
-    <section id="FAQ" class="faq-section">
-      <h1 class="faq-title">Frequently Asked Questions</h1>
       {#each faqs as faq, i}
         <div class="faq-item">
           <button class="faq-question" on:click={() => toggleFAQ(i)}>
             {faq.question}
-            <span class="arrow">{faq.open ? "▲" : "▼"}</span>
+            <span>{faq.open ? '▲' : '▼'}</span>
           </button>
+
           {#if faq.open}
             <div class="faq-answer">
               <p>{faq.answer}</p>
@@ -140,25 +225,33 @@
       {/each}
     </section>
 
-    <!-- Contact Section -->
-    <section id="Contact" class="contact-section">
-      <Form on:submit={submitContactForm} class="contact-form">
+    <!-- CONTACT -->
+    <section id="contact" class="contact-section">
+      <Form on:submit={submitContactForm}>
         <FormGroup legendText="Contact Us">
-          <div class="form-item">
-            <TextInput bind:value={contactName} id="name" labelText="Name" placeholder="Your full name" required />
-          </div>
-          <div class="form-item">
-            <TextInput bind:value={contactEmail} id="email" type="email" labelText="Email" placeholder="Your email address" required />
-          </div>
-          <div class="form-item">
-            <TextArea bind:value={contactMessage} id="message" labelText="Message" placeholder="Write your message here..." rows="4" required />
-          </div>
-          <div class="form-button">
-            <Button type="submit" disabled={sending}>
-              {#if sending}Sending...{/if}
-              {#if !sending}Send Message{/if}
-            </Button>
-          </div>
+          <TextInput
+            bind:value={contactName}
+            id="name"
+            labelText="Name"
+            required
+          />
+          <TextInput
+            bind:value={contactEmail}
+            id="email"
+            type="email"
+            labelText="Email"
+            required
+          />
+          <TextArea
+            bind:value={contactMessage}
+            id="message"
+            labelText="Message"
+            rows="4"
+            required
+          />
+          <Button type="submit" disabled={sending}>
+            {sending ? 'Sending...' : 'Send Message'}
+          </Button>
         </FormGroup>
       </Form>
     </section>
@@ -170,13 +263,11 @@
 </div>
 
 <style>
-  /* ========== Base Layout ========== */
   .dark-page {
-    background: linear-gradient(180deg, #000000 0%, #1e1e1e 100%);
+    background: linear-gradient(180deg, #000, #1e1e1e);
     color: #e0e0e0;
     min-height: 100vh;
     font-family: 'IBM Plex Sans', sans-serif;
-    scroll-behavior: smooth;
   }
 
   .container {
@@ -185,141 +276,52 @@
     padding: 0 1rem;
   }
 
-  .auth-buttons {
-    display: flex;
-    gap: 0.9rem;
-    margin-right: 1rem;
-  }
-
-  /* ========== Info Section ========== */
-  .info-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 2rem 0;
-  }
-
- .info-item:first-child h2 {
-  font-size: clamp(2rem, 8vw, 8rem);
-  font-weight: 1000;
-  color: #fff;
-}
-
-
-  .info-item h2 {
-    margin-bottom: 0.5rem;
+  .main-title {
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-weight: 900;
     color: #fff;
   }
 
-  .info-item p {
+  .subtitle {
     color: #bbb;
+    max-width: 700px;
   }
 
-  /* ========== Feature Section (Fade In) ========== */
   .features-section {
-    display: flex;
     text-align: center;
-    flex-direction: column;
   }
 
   .feature-item {
     opacity: 0;
-    transform: translateY(40px);
-    padding: 1.8rem;
-    border-radius: 10px;
-    transition: transform 0.3s ease;
-    animation: fadeInUp 0.9s ease forwards;
-  }
-
-  .feature-item:hover {
-    transform: translateY(-5px);
-  }
-
-  .feature-item h2 {
-    color: #fff;
-    font-size: 1.7rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .feature-item p {
-    color: #bbb;
-    font-size: 1.05rem;
+    animation: fadeInUp 0.8s forwards;
+    padding: 2rem;
   }
 
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(40px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ========== FAQ Section ========== */
-  .faq-section {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 1rem;
-  }
-
-  .faq-title {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
-  }
-
-  .faq-item {
-    border-bottom: 1px solid #444;
-    padding: 1rem 0;
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .faq-question {
     width: 100%;
     background: none;
     border: none;
-    font-size: 1.2rem;
-    color: #e0e0e0;
+    color: #fff;
+    text-align: left;
     cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
 
-  .faq-question:hover {
-    color: #4fc3f7;
-  }
-
-  .faq-answer {
-    margin-top: 0.5rem;
-    padding-left: 1rem;
-    color: #ccc;
-    animation: fadeIn 0.3s ease-in-out;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ========== Contact Section ========== */
-  .contact-section {
-    margin-top: 3rem;
-    padding: 2rem 0;
-  }
-
-  .form-item {
-    margin-bottom: 1.5rem;
-  }
-
-  .form-button {
-    margin-top: 1.5rem;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  /* ========== Footer ========== */
   .footer {
-    background: #121212;
-    color: #aaa;
     text-align: center;
-    padding: 2rem 1rem;
-    font-size: 0.9rem;
-    margin-top: 3rem;
+    padding: 2rem;
+    color: #aaa;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .feature-item {
+      animation: none;
+    }
   }
 </style>
