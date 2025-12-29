@@ -10,7 +10,7 @@
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch("http://localhost:8080/api/submissions", {
+      const res = await fetch("https://cowlibrate.onrender.com/api/submissions", {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",

@@ -47,7 +47,7 @@ async function fetchMilkYieldData() {
     const token = localStorage.getItem("token"); 
     if (!token) throw new Error("User not authenticated");
 
-    const res = await fetch("http://127.0.0.1:8080/MilkYield-distribution", {
+    const res = await fetch("https://cowlibrate.onrender.com/MilkYield-distribution", {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -78,7 +78,7 @@ async function fetchDonutData() {
     const token = localStorage.getItem("token"); // get JWT token
     if (!token) throw new Error("User not authenticated");
 
-    const res = await fetch("http://127.0.0.1:8080/health-distribution", {
+    const res = await fetch("https://cowlibrate.onrender.com/health-distribution", {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -100,7 +100,7 @@ async function fetchPieData() {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("User not authenticated");
 
-    const res = await fetch("http://127.0.0.1:8080/breed-distribution", {
+    const res = await fetch("https://cowlibrate.onrender.com/breed-distribution", {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -125,7 +125,7 @@ async function fetchAreaData() {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("User not authenticated");
 
-    const res = await fetch("http://127.0.0.1:8080/water-intake", {
+    const res = await fetch("https://cowlibrate.onrender.com/water-intake", {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"

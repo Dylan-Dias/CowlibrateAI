@@ -226,7 +226,7 @@ def forgot_password():
     }, JWT_SECRET, algorithm="HS256")
 
 
-        reset_link = f"http://localhost:5173/reset-password/{token}"
+        reset_link = f"https://cowlibrate.onrender.com/reset-password/{token}"
 
         # Send email
         msg = Message(

@@ -49,7 +49,7 @@
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8080/api/optimize", {
+      const res = await fetch("https://cowlibrate.onrender.com/api/optimize", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(payload)
