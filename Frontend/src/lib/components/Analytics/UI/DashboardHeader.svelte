@@ -8,15 +8,8 @@
   export let onLogout = () => {};
 </script>
 
-<Header company="CowlibrateAI Dashboard" hideMenuButton>
-  <!-- Only one hamburger button -->
-  <button
-    class="hamburger"
-    aria-label="Open menu"
-    on:click={() => (sideNavOpen = !sideNavOpen)}
-  >
-    ☰
-  </button>
+<Header company="CowlibrateAI Dashboard" on:menu-toggle={() => (sideNavOpen = !sideNavOpen)}>
+  <!-- No custom button needed -->
 </Header>
 
 <SideNav expanded={sideNavOpen} on:overlay-click={() => (sideNavOpen = false)}>
@@ -35,14 +28,3 @@
     </SideNavLink>
   </SideNavItems>
 </SideNav>
-
-<style>
-.hamburger {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  margin-left: 1rem;
-}
-</style>
