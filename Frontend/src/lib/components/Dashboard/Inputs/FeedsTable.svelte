@@ -24,13 +24,13 @@
     />
 
     <NumberInput 
-      label="Feed Quantity" 
+      labelText="Feed Quantity" 
       min="0" 
       bind:value={f.feed_quantity} 
     />
 
     <NumberInput 
-      label="Feed Percentage" 
+      labelText="Feed Percentage" 
       min="0" 
       bind:value={f.feed_percentage} 
     />
@@ -41,9 +41,10 @@
 
 <style>
   .grid-row {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(3, 1fr);
-    margin-bottom: 1rem;
-  }
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  margin-bottom: 1rem;
+}
+
 </style>

@@ -17,22 +17,14 @@ export let config = {
 
 <h2>Additional Inputs</h2>
 <div class="grid-row">
-  <NumberInput label="Indoor Temp (°C)" bind:value={config.indoor_temp} invalid={false}/>
-  <NumberInput label="Outdoor Temp (°C)" bind:value={config.outdoor_temp} invalid={false} />
-  <NumberInput label="Budget ($)" min="0" bind:value={config.budget} invalid={false} />
+  <NumberInput labelText="Indoor Temp (°C)"  bind:value={config.indoor_temp} invalid={false}/>
+  <NumberInput labelText="Outdoor Temp (°C)" bind:value={config.outdoor_temp} invalid={false} />
+  <NumberInput labelText="Budget ($)"  bind:value={config.budget} invalid={false} />
 </div>
 <div class="grid-row">
-  <NumberInput label="Protein (%)" min="0" bind:value={config.protein} invalid={false} />
-  <NumberInput label="Butterfat (%)" min="0" bind:value={config.butterfat} invalid={false} />
-  <NumberInput label="Somatic Cell Count" min="0" bind:value={config.somatic_cell_count} invalid={false}  />
-  <NumberInput label="Water Intake (L/day)" min="0" bind:value={config.water_intake} invalid={false} />
+  <NumberInput labelText="Protein (%)"  bind:value={config.protein} invalid={false} />
+  <NumberInput labelText="Butterfat (%)"  bind:value={config.butterfat} invalid={false} />
+  <NumberInput labelText="Somatic Cell Count"  bind:value={config.somatic_cell_count} invalid={false}  />
+  <NumberInput labelText="Water Intake (L/day)"  bind:value={config.water_intake} invalid={false} />
 </div>
 
-<style>
-  .grid-row {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(3, 1fr);
-    margin-bottom: 1rem;
-  }
-</style>
