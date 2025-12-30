@@ -80,8 +80,7 @@ async function fetchDonutData() {
 
     const res = await fetch("https://cowlibrate.onrender.com/health-distribution", {
       headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
+        Authorization: `Bearer ${localStorage.getItem("token")}`
       }
     });
 

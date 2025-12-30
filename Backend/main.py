@@ -68,18 +68,27 @@ def get_db_connection():
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        auth_header = request.headers.get("Authorization", "")
-        token = auth_header.replace("Bearer ", "") if auth_header.startswith("Bearer ") else None
+        token = None
+
+        auth_header = request.headers.get("Authorization")
+        if auth_header and auth_header.startswith("Bearer "):
+            token = auth_header.split(" ")[1]
+
         if not token:
             return jsonify({"error": "Token missing"}), 401
+
         try:
             data = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
-            return f(data.get("user_id"), *args, **kwargs)
+            user_id = data["user_id"]
         except jwt.ExpiredSignatureError:
             return jsonify({"error": "Token expired"}), 401
         except jwt.InvalidTokenError:
             return jsonify({"error": "Invalid token"}), 401
+
+        return f(user_id, *args, **kwargs)
+
     return decorated
+
 
 # Token Helper Function 
 
@@ -564,11 +573,14 @@ def health_distribution(user_id):
     try:
         with get_db_connection() as conn, conn.cursor() as cur:
             cur.execute("""
-                SELECT bovine->> 'health' AS health, COUNT(*) AS cnt
-                FROM submissions, jsonb_array_elements(COALESCE(bovines::jsonb, '[]'::jsonb)) AS bovine
-                WHERE user_id IN (<list of user_ids with data>)
+                SELECT
+                COALESCE(bovine->>'health', 'unknown') AS health,
+                COUNT(*) AS cnt
+                FROM submissions,
+                jsonb_array_elements(COALESCE(bovines::jsonb, '[]'::jsonb)) AS bovine
                 GROUP BY health
                 ORDER BY cnt DESC;
+
 
             """)
             rows = cur.fetchall()
