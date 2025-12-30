@@ -29,11 +29,3 @@
 
 <Button kind="ghost" on:click={onAddBovine}>+ Add Bovine</Button>
 
-<style>
-  .grid-row {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(3, 1fr);
-    margin-bottom: 1rem;
-  }
-</style>
