@@ -13,9 +13,14 @@
   export let onLogout = () => {};
 </script>
 
-<Header company="CowlibrateAI Dashboard" on:menu-toggle={() => (sideNavOpen = !sideNavOpen)}>
+<!-- HEADER (Carbon’s built‑in hamburger works automatically) -->
+<Header
+  company="CowlibrateAI Dashboard"
+  on:menu-toggle={() => (sideNavOpen = !sideNavOpen)}
+>
 </Header>
 
+<!-- SIDENAV (Carbon handles mobile vs desktop automatically) -->
 <SideNav
   expanded={sideNavOpen}
   on:overlay-click={() => (sideNavOpen = false)}
@@ -39,11 +44,13 @@
   </SideNavItems>
 </SideNav>
 
+<!-- MAIN CONTENT -->
 <main class="content">
   <slot />
 </main>
 
 <style>
+  /* Keep header above everything */
   header.bx--header {
     position: fixed;
     top: 0;
@@ -52,16 +59,19 @@
     z-index: 8000;
   }
 
+  /* Prevent content from hiding under header */
   .content {
     padding-top: 3rem;
   }
 
+  /* Ensure SideNav overlays correctly */
   :global(.bx--side-nav) {
     z-index: 7000;
   }
 
-  :global(body),
-  :global(html) {
+  /* Prevent layout clipping */
+  :global(html),
+  :global(body) {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
