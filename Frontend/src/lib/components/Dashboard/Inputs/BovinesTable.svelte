@@ -17,13 +17,13 @@
 
 {#each bovines as b (b.id)}
   <div class="grid-row">
-    <NumberInput label="Milk Yield" min="0" bind:value={b.milk_yield} />
+    <TextInput label="Milk Yield" placeholder="Milk Yield" bind:value={b.milk_yield} />
     <TextInput labelText="Health" placeholder="Health Status" bind:value={b.health} />
     <TextInput labelText="Breed" placeholder="e.g. Holstein" bind:value={b.breed} />
   </div>
   <div class="grid-row">
     <TextInput labelText="Lactation Stage" placeholder="Stage" bind:value={b.lactation_stage} />
-    <NumberInput label="Age" min="0" bind:value={b.age} />
+    <TextInput label="Age" placeholder="Age" bind:value={b.age} />
   </div>
 {/each}
 
