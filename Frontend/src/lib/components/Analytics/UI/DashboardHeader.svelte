@@ -1,8 +1,6 @@
 <script>
   import {
     Header,
-    HeaderName,
-    HeaderMenuButton,
     HeaderNav,
     HeaderNavItem,
     SideNav,
@@ -10,24 +8,23 @@
     SideNavLink
   } from "carbon-components-svelte";
 
+  let isSideNavOpen = false;
+
   export let onNavigate = (path) => {};
   export let onGenerateReport = () => {};
   export let onLogout = () => {};
-
-  let isSideNavOpen = false;
 </script>
 
-<Header aria-label="CowlibrateAI Dashboard">
-  <!-- Hamburger menu (mobile) -->
-  <HeaderMenuButton
-    aria-label="Open menu"
-    isActive={isSideNavOpen}
+<Header company="CowlibrateAI Dashboard">
+  <!-- Fake hamburger using button -->
+  <button
+    class="menu-btn"
     on:click={() => (isSideNavOpen = !isSideNavOpen)}
-  />
+    aria-label="Menu"
+  >
+    ☰
+  </button>
 
-  <HeaderName prefix="">CowlibrateAI</HeaderName>
-
-  <!-- Desktop Nav -->
   <HeaderNav class="desktop-nav">
     <HeaderNavItem on:click={() => onNavigate('/cow')}>Bovine Entry</HeaderNavItem>
     <HeaderNavItem on:click={() => onNavigate('/dbview')}>Herd View</HeaderNavItem>
@@ -36,24 +33,12 @@
   </HeaderNav>
 </Header>
 
-<!-- Mobile Side Nav -->
-<SideNav
-  expanded={isSideNavOpen}
-  on:overlay-click={() => (isSideNavOpen = false)}
->
+<SideNav expanded={isSideNavOpen}>
   <SideNavItems>
-    <SideNavLink on:click={() => { onNavigate('/cow'); isSideNavOpen = false; }}>
-      Bovine Entry
-    </SideNavLink>
-    <SideNavLink on:click={() => { onNavigate('/dbview'); isSideNavOpen = false; }}>
-      Herd View
-    </SideNavLink>
-    <SideNavLink on:click={() => { onGenerateReport(); isSideNavOpen = false; }}>
-      Generate Report
-    </SideNavLink>
-    <SideNavLink on:click={() => { onLogout(); isSideNavOpen = false; }}>
-      Logout
-    </SideNavLink>
+    <SideNavLink on:click={() => onNavigate('/cow')}>Bovine Entry</SideNavLink>
+    <SideNavLink on:click={() => onNavigate('/dbview')}>Herd View</SideNavLink>
+    <SideNavLink on:click={onGenerateReport}>Generate Report</SideNavLink>
+    <SideNavLink on:click={onLogout}>Logout</SideNavLink>
   </SideNavItems>
 </SideNav>
 
