@@ -27,3 +27,12 @@ export let config = {
   <NumberInput label="Somatic Cell Count" min="0" bind:value={config.somatic_cell_count} invalid={false}  />
   <NumberInput label="Water Intake (L/day)" min="0" bind:value={config.water_intake} invalid={false} />
 </div>
+
+<style>
+  .grid-row {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, 1fr);
+    margin-bottom: 1rem;
+  }
+</style>
