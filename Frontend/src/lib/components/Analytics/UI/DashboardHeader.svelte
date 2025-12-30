@@ -1,79 +1,75 @@
 <script>
   import {
     Header,
+    HeaderName,
+    HeaderMenuButton,
+    HeaderNav,
+    HeaderNavItem,
     SideNav,
     SideNavItems,
     SideNavLink
   } from "carbon-components-svelte";
 
-  let sideNavOpen = false;
-
   export let onNavigate = (path) => {};
   export let onGenerateReport = () => {};
   export let onLogout = () => {};
+
+  let isSideNavOpen = false;
 </script>
 
-<!-- HEADER (Carbon’s built‑in hamburger works automatically) -->
-<Header
-  company="CowlibrateAI Dashboard"
-  on:menu-toggle={() => (sideNavOpen = !sideNavOpen)}
->
+<Header aria-label="CowlibrateAI Dashboard">
+  <!-- Hamburger menu (mobile) -->
+  <HeaderMenuButton
+    aria-label="Open menu"
+    isActive={isSideNavOpen}
+    on:click={() => (isSideNavOpen = !isSideNavOpen)}
+  />
+
+  <HeaderName prefix="">CowlibrateAI</HeaderName>
+
+  <!-- Desktop Nav -->
+  <HeaderNav class="desktop-nav">
+    <HeaderNavItem on:click={() => onNavigate('/cow')}>Bovine Entry</HeaderNavItem>
+    <HeaderNavItem on:click={() => onNavigate('/dbview')}>Herd View</HeaderNavItem>
+    <HeaderNavItem on:click={onGenerateReport}>Generate Report</HeaderNavItem>
+    <HeaderNavItem on:click={onLogout}>Logout</HeaderNavItem>
+  </HeaderNav>
 </Header>
 
-<!-- SIDENAV (Carbon handles mobile vs desktop automatically) -->
+<!-- Mobile Side Nav -->
 <SideNav
-  expanded={sideNavOpen}
-  on:overlay-click={() => (sideNavOpen = false)}
+  expanded={isSideNavOpen}
+  on:overlay-click={() => (isSideNavOpen = false)}
 >
   <SideNavItems>
-    <SideNavLink on:click={() => { onNavigate('/cow'); sideNavOpen = false; }}>
+    <SideNavLink on:click={() => { onNavigate('/cow'); isSideNavOpen = false; }}>
       Bovine Entry
     </SideNavLink>
-
-    <SideNavLink on:click={() => { onNavigate('/dbview'); sideNavOpen = false; }}>
+    <SideNavLink on:click={() => { onNavigate('/dbview'); isSideNavOpen = false; }}>
       Herd View
     </SideNavLink>
-
-    <SideNavLink on:click={() => { onGenerateReport(); sideNavOpen = false; }}>
+    <SideNavLink on:click={() => { onGenerateReport(); isSideNavOpen = false; }}>
       Generate Report
     </SideNavLink>
-
-    <SideNavLink on:click={() => { onLogout(); sideNavOpen = false; }}>
+    <SideNavLink on:click={() => { onLogout(); isSideNavOpen = false; }}>
       Logout
     </SideNavLink>
   </SideNavItems>
 </SideNav>
 
-<!-- MAIN CONTENT -->
-<main class="content">
-  <slot />
-</main>
-
 <style>
-  /* Keep header above everything */
-  header.bx--header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 8000;
+  .desktop-nav {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .desktop-nav {
+    display: flex;
   }
 
-  /* Prevent content from hiding under header */
-  .content {
-    padding-top: 3rem;
+  :global(.bx--header__menu-button) {
+    display: none;
   }
+}
 
-  /* Ensure SideNav overlays correctly */
-  :global(.bx--side-nav) {
-    z-index: 7000;
-  }
-
-  /* Prevent layout clipping */
-  :global(html),
-  :global(body) {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-  }
 </style>
