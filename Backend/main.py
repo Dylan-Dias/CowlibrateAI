@@ -204,7 +204,7 @@ def login():
 
     except Exception as e:
         logging.exception("Login error")
-        return jsonify({"error": "Internal server error", "detail": str(e)}), 500
+        return jsonify({"error": "To many Failed Attempts, please wait 5 minutes", "detail": str(e)}), 500
 
 @app.route("/logout", methods=["POST"])
 def logout():
