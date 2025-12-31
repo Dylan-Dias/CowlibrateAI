@@ -1,9 +1,9 @@
 <script>
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
-  import DBNav from "$lib/components/DatabaseView/DBNav.svelte";
+
+  import DashboardHeader from "$lib/components/DashboardHeader.svelte";
   import DatabaseView from "$lib/components/DatabaseView/DatabaseView.svelte";
-  import { Header, HeaderNav, HeaderNavItem, FileUploaderButton } from "carbon-components-svelte";
 
   let entries = [];
   let loading = true;
@@ -12,7 +12,10 @@
   onMount(async () => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) goto("/login");
+      if (!token) {
+        goto("/login");
+        return;
+      }
 
       const res = await fetch(
         "https://cowlibrate.onrender.com/api/submissions",
@@ -24,7 +27,9 @@
         }
       );
 
-      if (!res.ok) throw new Error("Failed to load submissions.");
+      if (!res.ok) {
+        throw new Error("Failed to load submissions.");
+      }
 
       entries = await res.json();
     } catch (err) {
