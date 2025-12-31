@@ -35,25 +35,29 @@
 
 <style>
 
+:global(.bx--form-group) {
+  display: flex;
+  flex-direction: column;
+}
 
-  :global(.bx--form-group) {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
+:global(.bx--form-item) {
+  margin-bottom: 1.25rem;
+}
 
-  .button-group {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
 
-  :global(.bx--btn) {
-    min-width: auto;
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
-  }
+:global(.bx--btn) {
+  min-width: auto;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+
 
   :global(.bx--password-input .bx--text-input__field-wrapper) {
     display: flex;
