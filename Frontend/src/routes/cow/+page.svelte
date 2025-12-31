@@ -160,3 +160,32 @@ function handleFileUpload(files) {
 
   <Notifications {success} {error} />
 </main>
+
+<style>
+  .submit-area {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.submit-area button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #0f62fe; /* IBM Carbon blue */
+  color: #fff;
+}
+
+.submit-area button:hover {
+  background-color: #0353e9;
+}
+
+.submit-area button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+</style>
