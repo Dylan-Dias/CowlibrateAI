@@ -1,9 +1,9 @@
 <script>
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
-
   import DBNav from "$lib/components/DatabaseView/DBNav.svelte";
   import DatabaseView from "$lib/components/DatabaseView/DatabaseView.svelte";
+  import { Header, HeaderNav, HeaderNavItem, FileUploaderButton } from "carbon-components-svelte";
 
   let entries = [];
   let loading = true;
