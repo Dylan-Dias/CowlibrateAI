@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
 
-  import DashboardHeader from "$lib/components/DashboardHeader.svelte";
+  import DBNav from "$lib/components/DashboardHeader.svelte";
   import DatabaseView from "$lib/components/DatabaseView/DatabaseView.svelte";
 
   let entries = [];
