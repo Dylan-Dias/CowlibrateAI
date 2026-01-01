@@ -53,7 +53,7 @@ main {
   padding: 5rem 4.5rem;
   background: var(--cds-layer);
   border-radius: 0px;
-  box-shadow: 0 10px 10px 2px  rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 10px 10px  rgba(0, 0, 0, 0.1);
   font-family: 'Segoe UI', Tahoma, sans-serif;
 
   /* Center vertically */
