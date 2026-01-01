@@ -212,11 +212,16 @@
           <TextInput bind:value={contactName} id="name" labelText="Name" required />
           <TextInput bind:value={contactEmail} id="email" type="email" labelText="Email" required />
           <TextArea bind:value={contactMessage} id="message" labelText="Message" rows="4" required />
-          <Button type="submit" disabled={sending}>
+         
+          <div class="submit-center">
+             <Button type="submit" disabled={sending}>
             {sending ? 'Sending…' : 'Send Message'}
           </Button>
+
+          </div>
         </FormGroup>
       </Form>
+
     </section>
   </main>
 
@@ -229,6 +234,14 @@
 /* ======================
    GLOBAL LAYOUT
 ====================== */
+
+/** Button Styling and Centering*/
+.submit-center {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
 .dark-page {
   background: linear-gradient(180deg, #000, #1e1e1e);
   color: #e0e0e0;
