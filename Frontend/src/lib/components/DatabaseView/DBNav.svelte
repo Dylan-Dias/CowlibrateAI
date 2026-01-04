@@ -18,9 +18,9 @@
 </script>
 
 <Header company="CowlibrateAI" platformName="Dashboard">
-  <!-- Desktop Nav -->
+ 
   <HeaderNav>
-    <!-- <HeaderNavItem on:click={() => onNavigate('/dbview')}>Herd View</HeaderNavItem> -->
+    <HeaderNavItem on:click={() => navigateTo("/analytics")}>Bovine Analytics</HeaderNavItem>
     <HeaderNavItem on:click={onGenerateReport}>Generate Report</HeaderNavItem>
     <HeaderNavItem on:click={onLogout}>Logout</HeaderNavItem>
   </HeaderNav>
