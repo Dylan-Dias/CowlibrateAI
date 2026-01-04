@@ -157,14 +157,14 @@ def register():
 
         return jsonify({
             "success": True,
-            "message": "User registered successfully",
+            "message": "User Registered successfully",
             "token": token,
             "user": {"id": user_id, "username": username, "email": email, "role": role}
         }), 201
 
     except Exception as e:
-        logging.exception("Registration failed")
-        return jsonify({"error": "Registration failed", "detail": str(e)}), 500
+        logging.exception("Username or Email already exists")
+        return jsonify({"error": "Username or Email already exists", "detail": str(e)}), 500
 
 
 @app.route("/login", methods=["POST"])
