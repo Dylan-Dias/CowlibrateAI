@@ -14,7 +14,6 @@
   export let onGenerateReport = () => {};
   export let onLogout = () => {};
 
-  let isSideNavOpen = false;
 </script>
 
 <Header company="CowlibrateAI" platformName="Dashboard">
