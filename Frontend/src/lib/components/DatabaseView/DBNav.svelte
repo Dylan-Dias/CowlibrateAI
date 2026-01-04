@@ -10,7 +10,7 @@
     SideNavLink
   } from "carbon-components-svelte";
 
-  export let onNavigate = (path) => {};
+  export let navigateTo = (path) => {};
   export let onGenerateReport = () => {};
   export let onLogout = () => {};
 
