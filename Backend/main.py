@@ -164,7 +164,11 @@ def register():
 
     except Exception as e:
         logging.exception("Username or Email already exists")
-        return jsonify({"error": "Username or Email already exists", "detail": str(e)}), 500
+        return jsonify({
+            "error": "Username or Email already exists",
+            "code": "USER_EXISTS",
+            "action": "LOGIN"
+        }), 409 
 
 
 @app.route("/login", methods=["POST"])
