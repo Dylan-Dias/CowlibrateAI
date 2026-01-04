@@ -6,7 +6,8 @@
   import FeedsTable from '$lib/components/Dashboard/Inputs/FeedsTable.svelte';
   import ConfigInputs from '$lib/components/Dashboard/Inputs/ConfigInputs.svelte';
   import Notifications from '$lib/components/Dashboard/UI/Notifications.svelte';
-
+  import Modal from '$components/Dashboard/UI/Modal.svelte';
+  let showModal = true;
   let bovines = [];
   let feeds = [];
   let config = {};
