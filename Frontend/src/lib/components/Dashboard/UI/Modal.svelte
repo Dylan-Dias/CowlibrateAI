@@ -5,7 +5,7 @@
 </script>
 
 <Modal
-  open={open}
+  bind:open
   modalHeading="Welcome!"
   primaryButtonText="Got it"
   secondaryButtonText="Close"

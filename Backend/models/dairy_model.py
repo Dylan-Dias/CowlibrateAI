@@ -3,7 +3,7 @@ import itertools
 import .constants import BREED_PARAMS
 
 def thi(indoor, outdoor):
-    retrun indoor + 0.36 * outdoor 
+    return indoor + 0.36 * outdoor 
 
 def intake_adjustment(thi_value):
     if thi_value < 68:
@@ -27,3 +27,14 @@ def bcs_adjustment(bcs):
 def water_cap(milk, water):
     return min(milk, water / 4.5)
 
+def energy_limited_milk(nel_mcal):
+    return nel_mcal / 0.74 
+
+def protein_utilization(rdp, rup):
+    rdp_eff = min(rdp / 0.10, 1.0)
+    rup_eff = min(rup / 0.06, 1.0)
+    return 0.6 * rdp_eff + 0.4 * rup_eff 
+
+# Lactation Curve 
+def lactation_curve(dim, breed):
+    p = BREED_PARAMS[breed]

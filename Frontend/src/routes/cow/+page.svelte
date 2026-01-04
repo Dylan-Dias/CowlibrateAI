@@ -7,6 +7,7 @@
   import ConfigInputs from '$lib/components/Dashboard/Inputs/ConfigInputs.svelte';
   import Notifications from '$lib/components/Dashboard/UI/Notifications.svelte';
   import Modal from '$components/Dashboard/UI/Modal.svelte';
+
   let showModal = true;
   let bovines = [];
   let feeds = [];
@@ -145,6 +146,7 @@ function handleFileUpload(files) {
 </script>
 
 <DashboardHeader onFileUpload={handleFileUpload} onLogout={logout} />
+<Modal bind:open={showModal} />
 
 <main>
  
