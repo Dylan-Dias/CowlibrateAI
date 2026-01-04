@@ -7,7 +7,9 @@
 <Modal
   bind:open
   modalHeading="Welcome!"
->
+hasScrollingContent
+  passiveModal
+  >
   <p>
     Thanks for registering! Before you begin, please review this information.
   </p>
