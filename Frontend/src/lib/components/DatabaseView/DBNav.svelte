@@ -1,27 +1,27 @@
 <script>
   import {
     Header,
-    HeaderName,
-    HeaderMenuButton,
     HeaderNav,
-    HeaderNavItem,
-    SideNav,
-    SideNavItems,
-    SideNavLink
+    HeaderNavLink
   } from "carbon-components-svelte";
 
   export let onNavigate = (path) => {};
   export let onGenerateReport = () => {};
   export let onLogout = () => {};
-
 </script>
 
 <Header company="CowlibrateAI" platformName="Dashboard">
- 
   <HeaderNav>
- <HeaderNavItem on:click={() => onNavigate("/analytics")}>Bovine Analytics</HeaderNavItem>
-    <HeaderNavItem on:click={onGenerateReport}>Generate Report</HeaderNavItem>
-    <HeaderNavItem on:click={onLogout}>Logout</HeaderNavItem>
+    <HeaderNavLink href="/analytics" on:click={e => { e.preventDefault(); onNavigate("/analytics"); }}>
+      Bovine Analytics
+    </HeaderNavLink>
+
+    <HeaderNavLink as="button" on:click={onGenerateReport}>
+      Generate Report
+    </HeaderNavLink>
+
+    <HeaderNavLink as="button" on:click={onLogout}>
+      Logout
+    </HeaderNavLink>
   </HeaderNav>
 </Header>
-
