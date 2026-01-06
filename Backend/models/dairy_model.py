@@ -1,4 +1,4 @@
-import math 
+ 
 import itertools 
 from constants import BREED_PARAMS
 
