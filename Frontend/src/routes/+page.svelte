@@ -73,8 +73,6 @@
     TextInput,
     TextArea,
     Form,
-    OverflowMenu,
-    OverflowMenuItem,
     FormGroup
   } from 'carbon-components-svelte';
 
@@ -158,14 +156,9 @@
 
 <div class="dark-page">
   <Header company="CowlibrateAI">
-  <OverflowMenu>
-  <OverflowMenuItem text="Manage credentials" />
-  <OverflowMenuItem
-    href="https://cloud.ibm.com/docs/api-gateway/"
-    text="API documentation"
-  />
-  <OverflowMenuItem danger text="Delete service" />
-</OverflowMenu>
+
+
+
     <HeaderNav>
       <HeaderNavItem on:click={() => scrollToSection('about')}>About</HeaderNavItem>
       <HeaderNavItem on:click={() => scrollToSection('features')}>Features</HeaderNavItem>
