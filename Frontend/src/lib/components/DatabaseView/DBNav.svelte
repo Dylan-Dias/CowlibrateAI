@@ -17,18 +17,8 @@
     <HeaderNavItem on:click={() => navigateTo("/analytics")}>
       Bovine Analytics
     </HeaderNavItem>
-      <HeaderNavItem on:click={() => navigateTo('/dbview')}>
-        Herd View
-    </HeaderNavItem>
+      
 
-    <HeaderNavItem>
-      <FileUploaderButton
-        buttonLabel="Upload Excel"
-        accept={[".xlsx", ".xls"]}
-        multiple={false}
-        on:change={(e) => onFileUpload(e.detail.files)}
-      />
-    </HeaderNavItem>
-    
+
   </HeaderNav>
 </Header>
