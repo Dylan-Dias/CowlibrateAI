@@ -2,26 +2,33 @@
   import {
     Header,
     HeaderNav,
-    HeaderNavLink
+    HeaderNavItem
   } from "carbon-components-svelte";
+  import { goto } from "$app/navigation";
 
-  export let onNavigate = (path) => {};
-  export let onGenerateReport = () => {};
-  export let onLogout = () => {};
+
+    function navigateTo(path) {
+    goto(path);
+  }
 </script>
 
-<Header company="CowlibrateAI" platformName="Dashboard">
+<Header company="Dairy Dashboard" platformName="Milk Yield">
   <HeaderNav>
-    <HeaderNavLink href="/analytics" on:click={e => { e.preventDefault(); onNavigate("/analytics"); }}>
+    <HeaderNavItem on:click={() => navigateTo("/analytics")}>
       Bovine Analytics
-    </HeaderNavLink>
+    </HeaderNavItem>
+      <HeaderNavItem on:click={() => navigateTo('/dbview')}>
+        Herd View
+    </HeaderNavItem>
 
-    <HeaderNavLink as="button" on:click={onGenerateReport}>
-      Generate Report
-    </HeaderNavLink>
-
-    <HeaderNavLink as="button" on:click={onLogout}>
-      Logout
-    </HeaderNavLink>
+    <HeaderNavItem>
+      <FileUploaderButton
+        buttonLabel="Upload Excel"
+        accept={[".xlsx", ".xls"]}
+        multiple={false}
+        on:change={(e) => onFileUpload(e.detail.files)}
+      />
+    </HeaderNavItem>
+    
   </HeaderNav>
 </Header>
