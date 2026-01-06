@@ -1,0 +1,3 @@
+Username = nyc123
+Email = nyc@gmail.company
+Password = Braga1819!
