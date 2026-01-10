@@ -176,6 +176,10 @@
           <TableRow><TableCell>Butterfat (%)</TableCell><TableCell>{submission.butterfat}</TableCell></TableRow>
           <TableRow><TableCell>SCC</TableCell><TableCell>{submission.somatic_cell_count}</TableCell></TableRow>
           <TableRow><TableCell>Water Intake</TableCell><TableCell>{submission.water_intake}</TableCell></TableRow>
+          <TableCell>
+              <Button size="sm" on:click={() => saveEdit(submission.id, "feed", i)}>Save</Button>
+                  <Button size="sm" kind="secondary" on:click={() => editing = null}>Cancel</Button>
+                </TableCell>
         </TableBody>
       </Table>
     </TableContainer>
