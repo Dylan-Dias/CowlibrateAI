@@ -1,13 +1,27 @@
 <script>
   import {
     TableContainer, Table, TableHead, TableHeader,
-    TableBody, TableRow, TableCell, Button, TextInput
+    TableBody, TableRow, TableCell,
+    Button, TextInput,
+    Pagination,
+    DatePicker, DatePickerInput
   } from "carbon-components-svelte";
 
   export let entries = [];
+
+  /* Editing */
   let editing = null;
   let editedRow = {};
 
+  /* Pagination */
+  let pageSize = 5;
+  let page = 1;
+
+  /* Date filtering */
+  let startDate = null;
+  let endDate = null;
+
+  /* ------------------ Editing ------------------ */
   function startEdit(submissionId, type, index) {
     editing = { submissionId, type, index };
     const submission = entries.find(s => s.id === submissionId);
@@ -19,63 +33,48 @@
     const submission = entries.find(s => s.id === submissionId);
     if (type === "bovine") submission.bovines[index] = editedRow;
     if (type === "feed") submission.feeds[index] = editedRow;
-
     editing = null;
     // TODO: PUT request
   }
+
+  /* ------------------ Filters ------------------ */
+  $: filteredEntries = entries.filter(e => {
+    if (!startDate && !endDate) return true;
+    const created = new Date(e.created_at);
+    if (startDate && created < startDate) return false;
+    if (endDate && created > endDate) return false;
+    return true;
+  });
+
+  /* ------------------ Pagination ------------------ */
+  $: pagedEntries = filteredEntries.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
 </script>
 
-<style>
-  .submission-card {
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  }
+<!--  DATE FILTER -->
+<DatePicker
+  datePickerType="range"
+  on:change={(e) => {
+    startDate = e.detail[0] ? new Date(e.detail[0]) : null;
+    endDate = e.detail[1] ? new Date(e.detail[1]) : null;
+    page = 1;
+  }}
+>
+  <DatePickerInput labelText="Start date" placeholder="mm/dd/yyyy" />
+  <DatePickerInput labelText="End date" placeholder="mm/dd/yyyy" />
+</DatePicker>
 
-  .section-title {
-    margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1d1d1d;
-  }
-
-  .submission-header {
-    font-size: 1.35rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 0.5rem;
-  }
-
-  .details-grid {
-    margin-top: 1rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    grid-gap: 0.5rem 1.2rem;
-    background: #fafafa;
-    padding: 1rem;
-    border-radius: 6px;
-    border: 1px solid #eee;
-  }
-
-  .detail-item {
-    font-size: 0.95rem;
-    line-height: 1.4;
-  }
-</style>
-
-{#each entries as submission}
+<!--  SUBMISSIONS -->
+{#each pagedEntries as submission}
   <div class="submission-card">
     <div class="submission-header">
       Submission {submission.id} — {submission.created_at}
     </div>
 
-    <!-- 🐄 BOVINES TABLE -->
+    <!--  BOVINES -->
     <div class="section-title">Bovines</div>
-
     <TableContainer>
       <Table>
         <TableHead>
@@ -84,16 +83,15 @@
             <TableHeader>Milk Yield</TableHeader>
             <TableHeader>Health</TableHeader>
             <TableHeader>Breed</TableHeader>
-            <TableHeader>Lactation Stage</TableHeader>
+            <TableHeader>Lactation</TableHeader>
             <TableHeader>Age</TableHeader>
             <TableHeader>Actions</TableHeader>
           </TableRow>
         </TableHead>
-
         <TableBody>
           {#each submission.bovines as cow, i}
             <TableRow>
-              {#if editing && editing.submissionId === submission.id && editing.type === "bovine" && editing.index === i}
+              {#if editing?.submissionId === submission.id && editing.type === "bovine" && editing.index === i}
                 <TableCell>{cow.id}</TableCell>
                 <TableCell><TextInput bind:value={editedRow.milk_yield} size="sm" /></TableCell>
                 <TableCell><TextInput bind:value={editedRow.health} size="sm" /></TableCell>
@@ -121,9 +119,8 @@
       </Table>
     </TableContainer>
 
-    <!-- 🌾 FEEDS TABLE -->
+    <!--  FEEDS -->
     <div class="section-title">Feeds</div>
-
     <TableContainer>
       <Table>
         <TableHead>
@@ -134,11 +131,10 @@
             <TableHeader>Actions</TableHeader>
           </TableRow>
         </TableHead>
-
         <TableBody>
           {#each submission.feeds as feed, i}
             <TableRow>
-              {#if editing && editing.submissionId === submission.id && editing.type === "feed" && editing.index === i}
+              {#if editing?.submissionId === submission.id && editing.type === "feed" && editing.index === i}
                 <TableCell><TextInput bind:value={editedRow.feed_type} size="sm" /></TableCell>
                 <TableCell><TextInput bind:value={editedRow.quantity} size="sm" /></TableCell>
                 <TableCell><TextInput bind:value={editedRow.percentage} size="sm" /></TableCell>
@@ -160,17 +156,50 @@
       </Table>
     </TableContainer>
 
-    <!-- 🔍 DETAILS SECTION -->
+    <!--  DETAILS -->
     <div class="section-title">Submission Details</div>
-    <div class="details-grid">
-      <div class="detail-item">Indoor Temp (°C): <strong>{submission.indoor_temp}</strong></div>
-      <div class="detail-item">Outdoor Temp (°C): <strong>{submission.outdoor_temp}</strong></div>
-      <div class="detail-item">Budget ($): <strong>{submission.budget}</strong></div>
-      <div class="detail-item">Protein (%): <strong>{submission.protein}</strong></div>
-      <div class="detail-item">Butterfat (%): <strong>{submission.butterfat}</strong></div>
-      <div class="detail-item">Somatic Cell Count: <strong>{submission.somatic_cell_count}</strong></div>
-      <div class="detail-item">Water Intake (L/day): <strong>{submission.water_intake}</strong></div>
-    </div>
-
+    <TableContainer>
+      <Table size="sm">
+        <TableBody>
+          <TableRow><TableCell>Indoor Temp</TableCell><TableCell>{submission.indoor_temp}</TableCell></TableRow>
+          <TableRow><TableCell>Outdoor Temp</TableCell><TableCell>{submission.outdoor_temp}</TableCell></TableRow>
+          <TableRow><TableCell>Budget ($)</TableCell><TableCell>{submission.budget}</TableCell></TableRow>
+          <TableRow><TableCell>Protein (%)</TableCell><TableCell>{submission.protein}</TableCell></TableRow>
+          <TableRow><TableCell>Butterfat (%)</TableCell><TableCell>{submission.butterfat}</TableCell></TableRow>
+          <TableRow><TableCell>SCC</TableCell><TableCell>{submission.somatic_cell_count}</TableCell></TableRow>
+          <TableRow><TableCell>Water Intake</TableCell><TableCell>{submission.water_intake}</TableCell></TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
   </div>
 {/each}
+
+<!--  PAGINATION -->
+<Pagination
+  totalItems={filteredEntries.length}
+  pageSize={pageSize}
+  page={page}
+  pageSizes={[5]}
+  on:change={(e) => page = e.detail.page}
+/>
+
+<style>
+  .submission-card {
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+
+  .submission-header {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    margin: 1.25rem 0 0.5rem;
+    font-weight: 600;
+  }
+</style>
