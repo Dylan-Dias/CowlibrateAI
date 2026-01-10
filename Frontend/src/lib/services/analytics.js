@@ -16,7 +16,8 @@ export async function getHealthChartData() {
     headers: authHeaders()
   });
 
-  const { labels, series } = await res.json();
+  
+  const { labels = [], series = [] } = await res.json();
 
   return labels.map((label, i) => ({
     group: label,
@@ -30,7 +31,8 @@ export async function getBreedChartData() {
     headers: authHeaders()
   });
 
-  const { labels, series } = await res.json();
+  
+  const { labels = [], series = [] } = await res.json();
 
   return labels.map((label, i) => ({
     group: label,
@@ -44,7 +46,8 @@ export async function getMilkYieldChartData() {
     headers: authHeaders()
   });
 
-  const { labels, series } = await res.json();
+  
+  const { labels = [], series = [] } = await res.json();
 
   return labels.map((label, i) => ({
     group: "Milk Yield",
@@ -59,7 +62,8 @@ export async function getWaterIntakeChartData() {
     headers: authHeaders()
   });
 
-  const { labels, series } = await res.json();
+  
+  const { labels = [], series = [] } = await res.json();
 
   return labels.map((label, i) => ({
     group: "Water Intake",

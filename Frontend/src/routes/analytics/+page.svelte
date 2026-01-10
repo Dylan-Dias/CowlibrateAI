@@ -8,10 +8,50 @@
   import MilkYieldBar from "$components/Analytics/Charts/MilkYieldBar.svelte";
   import WaterIntakeBar from "$components/Analytics/Charts/WaterIntakeBar.svelte";
 
+
+  import { getBreedChartData } from "$lib/services/analytics";
+  import { getHealthChartData } from "$lib/services/analytics";
+  import { getMilkYieldChartData } from "$lib/services/analytics";
+  import { getWaterIntakeChartData} from "$lib/services/analytics";
+
   let healthData = [];
   let breedData = [];
   let milkData = [];
   let waterData = [];
+
+  onMount(async () => {
+  try {
+    breedData = await getBreedChartData();
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+  onMount(async () => {
+  try {
+    breedData = await getHealthChartData();
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+  onMount(async () => {
+  try {
+    breedData = await getMilkYieldChartData();
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+  onMount(async () => {
+  try {
+    breedData = await getWaterIntakeChartData();
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+
 
   onMount(async () => {
     try {
@@ -23,6 +63,8 @@
       console.error('Error loading analytics:', err);
   }
   });
+
+
 
 function navigate(path) { goto(path); }
 

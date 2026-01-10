@@ -100,7 +100,7 @@ export async function authFetch(endpoint, options = {}) {
 }
 
 /* -------------------------------------------------
-   Example Protected API Calls
+   Protected API Calls
 ------------------------------------------------- */
 async function fetchHealthData() {
   const res = await fetch("https://cowlibrate.onrender.com/health-distribution", {
