@@ -1,16 +1,17 @@
 <script>
-  import { BarChart } from "@carbon/charts-svelte";
+  import { BarChartSimple } from "@carbon/charts-svelte";
 
-  export let waterData = [];
+  export let waterData = []; // array of objects { group, key, value }
 
   const options = {
     title: "Water Intake Levels",
+    height: "300px",
     axes: {
       left: { mapsTo: "value", title: "Count" },
-      bottom: { mapsTo: "key", scaleType: "labels" }
+      bottom: { mapsTo: "key", title: "Level" }
     },
-    height: "300px"
+    bar: { groupSpacing: 0.2 }
   };
 </script>
 
-<BarChart data={waterData} {options} />
+<BarChartSimple data={waterData} {options} />
