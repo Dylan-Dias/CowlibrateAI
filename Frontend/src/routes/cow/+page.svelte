@@ -7,6 +7,7 @@
   import ConfigInputs from '$lib/components/Dashboard/Inputs/ConfigInputs.svelte';
   import Notifications from '$lib/components/Dashboard/UI/Notifications.svelte';
   import Modal from '$components/Dashboard/UI/Modal.svelte';
+  import { Button } from "carbon-components-svelte";
 
   let showModal = true;
   let bovines = [];
@@ -158,7 +159,7 @@ function handleFileUpload(files) {
   
   
   <div class="submit-area">
-    <button on:click={submitData}>Run Optimization</button>
+    <Button on:click={submitData}>Run Optimization</Button>
   </div>
 
   <Notifications {success} {error} />

@@ -5,3 +5,7 @@ Password = Braga1819!
 Username = tommy123    
 Email = tommy@gmail.com
 Password = tommyGun123
+
+Username = Ark123
+Email = Ark123@gmail.com
+Password = Ark1234567!
