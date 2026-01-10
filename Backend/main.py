@@ -582,11 +582,12 @@ def health_distribution(user_id):
                 COUNT(*) AS cnt
                 FROM submissions,
                 jsonb_array_elements(COALESCE(bovines::jsonb, '[]'::jsonb)) AS bovine
+                WHERE submissions.user_id = %s
                 GROUP BY health
                 ORDER BY cnt DESC;
 
 
-            """)
+            """, (user_id,))
             rows = cur.fetchall()
         return jsonify({"labels": [r["health"] for r in rows], "series": [r["cnt"] for r in rows]}), 200
     except Exception as e:
