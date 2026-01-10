@@ -4,7 +4,9 @@
   import "$lib/styles/global.css";
   import "carbon-components-svelte/css/g10.css";
   import "@carbon/charts/styles.css";
+import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
 
+injectSpeedInsights();
 </script>
 
 <!-- Slot for rendering child components -->
