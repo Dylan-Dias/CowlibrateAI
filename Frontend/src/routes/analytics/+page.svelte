@@ -14,10 +14,14 @@
   let waterData = [];
 
   onMount(async () => {
+    try {
     healthData = await fetchHealthData();
     breedData = await fetchBreedData();
     milkData = await fetchMilkYieldData();
     waterData = await fetchWaterData();
+    } catch (err) {
+      console.error('Error loading analytics:', err);
+  }
   });
 </script>
 

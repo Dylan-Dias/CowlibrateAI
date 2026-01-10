@@ -102,20 +102,39 @@ export async function authFetch(endpoint, options = {}) {
 /* -------------------------------------------------
    Example Protected API Calls
 ------------------------------------------------- */
-export async function getHealthDistribution() {
-  return authFetch("/health-distribution");
+async function fetchHealthData() {
+  const res = await fetch("https://cowlibrate.onrender.com/health-distribution", {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  if (!res.ok) {
+    console.error("Failed to fetch health data:", res.status);
+    return { labels: [], series: [] };
+  }
+  return await res.json();
 }
 
-export async function getBreedDistribution() {
-  return authFetch("/breed-distribution");
+async function fetchBreedData() {
+  const res = await fetch("https://cowlibrate.onrender.com/breed-distribution", {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  if (!res.ok) return { labels: [], series: [] };
+  return await res.json();
 }
 
-export async function getWaterIntake() {
-  return authFetch("/water-intake");
+async function fetchMilkYieldData() {
+  const res = await fetch("https://cowlibrate.onrender.com/MilkYield-distribution", {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  if (!res.ok) return { labels: [], series: [] };
+  return await res.json();
 }
 
-export async function getOptimizationResults() {
-  return authFetch("/api/optimization-results");
+async function fetchWaterData() {
+  const res = await fetch("https://cowlibrate.onrender.com/water-intake", {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  if (!res.ok) return { labels: [], series: [] };
+  return await res.json();
 }
 
 export async function submitOptimization(data) {
