@@ -20,17 +20,17 @@
 		"vite": "^6.4.1"
 	},
 	"dependencies": {
+		"@carbon/charts": "^1.27.2",
+		"@carbon/charts-svelte": "^1.22.18",
 		"@event-calendar/day-grid": "^3.12.0",
 		"@event-calendar/interaction": "^3.12.0",
 		"@event-calendar/time-grid": "^3.12.0",
 		"@fortawesome/free-solid-svg-icons": "^7.1.0",
 		"@shadcn/ui": "^0.0.4",
-		"apexcharts": "^4.7.0",
 		"carbon-components": "^10.59.2",
 		"carbon-components-svelte": "^0.95.2",
 		"html2canvas": "^1.4.1",
 		"jspdf": "^3.0.1",
-		"svelte-apexcharts": "^1.0.2",
 		"svelte-fa": "^4.0.4",
 		"xlsx": "^0.18.5"
 	},
