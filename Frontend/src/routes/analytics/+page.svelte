@@ -23,6 +23,29 @@
       console.error('Error loading analytics:', err);
   }
   });
+
+function navigate(path) { goto(path); }
+
+  async function generateReport() {
+    const { jsPDF } = await import("jspdf");
+    const html2canvas = (await import("html2canvas")).default;
+
+    const pdf = new jsPDF("p", "pt", "a4");
+    const dashboardEl = document.querySelector("#dashboard");
+    const canvas = await html2canvas(dashboardEl, { scale: 2 });
+    const imgData = canvas.toDataURL("image/png");
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save("Goat-Analytics-Report.pdf");
+  }
+
+  function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    goto("/login");
+  }
 </script>
 
 <DashboardHeader 
@@ -30,6 +53,8 @@ onNavigate={navigate}
 onGenerateReport={generateReport} 
 onLogout={logout} 
 />
+
+
 
 <main class="grid">
   <HealthDonut {healthData} />
