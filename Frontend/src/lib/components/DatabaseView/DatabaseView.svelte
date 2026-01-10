@@ -160,6 +160,14 @@
     <div class="section-title">Submission Details</div>
     <TableContainer>
       <Table size="sm">
+         <TableHead>
+          <TableRow>
+            <TableHeader>Feed Type</TableHeader>
+            <TableHeader>Quantity</TableHeader>
+            <TableHeader>Percentage</TableHeader>
+            <TableHeader>Actions</TableHeader>
+          </TableRow>
+        </TableHead>
         <TableBody>
           <TableRow><TableCell>Indoor Temp</TableCell><TableCell>{submission.indoor_temp}</TableCell></TableRow>
           <TableRow><TableCell>Outdoor Temp</TableCell><TableCell>{submission.outdoor_temp}</TableCell></TableRow>
