@@ -1,16 +1,17 @@
 <script>
-  import { BarChart } from "@carbon/charts-svelte";
+  import { BarChartSimple } from '@carbon/charts-svelte'
 
-  export let milkData = [];
+  export let milkData = []; // array of objects { group, key, value }
 
   const options = {
-    title: "Milk Yield Distribution",
+    title: "Milk Yield",
+    height: "300px",
     axes: {
       left: { mapsTo: "value", title: "Liters" },
-      bottom: { mapsTo: "key", scaleType: "labels", title: "Cow" }
+      bottom: { mapsTo: "key", title: "Cow" }
     },
-    height: "300px"
+    bar: { groupSpacing: 0.2 }
   };
 </script>
 
-<BarChart data={milkData} {options} />
+<BarChartSimple data={milkData} {options} />
