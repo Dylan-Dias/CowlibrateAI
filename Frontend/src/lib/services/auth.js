@@ -143,3 +143,54 @@ export async function submitOptimization(data) {
     body: JSON.stringify(data),
   });
 }
+
+// src/lib/services/auth.js
+
+export async function requestPasswordReset(email) {
+  const res = await fetch(
+    'https://cowlibrate.onrender.com/forgot-password',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email })
+    }
+  );
+
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error('Invalid server response');
+  }
+
+  if (!res.ok) {
+    throw new Error(
+      data?.error || 'Failed to send reset instructions'
+    );
+  }
+
+  return data;
+}
+
+// Reset password via API
+export async function resetPassword(token, newPassword, confirmPassword) {
+  try {
+    const res = await fetch(`https://cowlibrate.onrender.com/reset-password/${token}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ password: newPassword, confirm_password: confirmPassword })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Failed to reset password.');
+    }
+
+    return data; // success response
+  } catch (err) {
+    throw new Error(err.message || 'Network error. Please try again.');
+  }
+}
