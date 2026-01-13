@@ -1,6 +1,6 @@
 <script>
   import 'carbon-components-svelte/css/g10.css';
-  import '../styles/Registration.css';
+  import '$lib/styles/Registration.css';
   import { goto } from '$app/navigation';
 
   import { register } from '$lib/services/auth';
