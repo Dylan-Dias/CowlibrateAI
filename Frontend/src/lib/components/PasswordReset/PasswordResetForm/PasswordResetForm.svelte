@@ -1,43 +1,35 @@
 <script>
-  import { Form, FormGroup, PasswordInput } from 'carbon-components-svelte';
+  import { Form, FormGroup, TextInput } from 'carbon-components-svelte';
   import SubmitButton from '$components/Registration/SubmitButton/SubmitButton.svelte';
   import { createEventDispatcher } from 'svelte';
 
-  export let token;
   export let loading = false;
-
-  let newPassword = '';
-  let confirmPassword = '';
+  export let email = '';
 
   const dispatch = createEventDispatcher();
 
   function submit(event) {
     event.preventDefault();
-    dispatch('submit', { newPassword, confirmPassword });
+    dispatch('submit', { email });
   }
 </script>
 
 <div class="form-wrapper">
-  <h2>Reset Your Password</h2>
+  <h2>Forgot Password</h2>
+  <p>Enter your email to receive password reset instructions.</p>
 
   <Form on:submit={submit}>
-    <FormGroup legendText="Enter your new password">
-      <PasswordInput
-        labelText="New Password"
-        bind:value={newPassword}
+    <FormGroup legendText="Email Address">
+      <TextInput
+        labelText="Email"
+        bind:value={email}
+        type="email"
         required
         disabled={loading}
-        class="password-input"
-      />
-      <PasswordInput
-        labelText="Confirm Password"
-        bind:value={confirmPassword}
-        required
-        disabled={loading}
-        class="password-input"
+        class="email-input"
       />
       <div class="button-group">
-        <SubmitButton text="Update Password" {loading} />
+        <SubmitButton text="Send Reset Link" {loading} />
       </div>
     </FormGroup>
   </Form>
@@ -52,24 +44,30 @@
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     font-family: 'IBM Plex Sans', sans-serif;
+    text-align: center;
   }
 
   .form-wrapper h2 {
-    text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
     font-weight: 600;
     color: #1d1d1d;
   }
 
-  .password-input {
+  .form-wrapper p {
+    margin-bottom: 1.5rem;
+    color: #555;
+    font-size: 0.95rem;
+  }
+
+  .email-input {
     margin-bottom: 1.2rem;
   }
 
-  .password-input input {
+  .email-input input {
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
-  .password-input input:focus {
+  .email-input input:focus {
     border-color: #0f62fe;
     box-shadow: 0 0 0 3px rgba(14, 118, 254, 0.2);
   }
@@ -80,18 +78,15 @@
     margin-top: 1.5rem;
   }
 
-  /* Optional: make the SubmitButton a bit wider for aesthetic balance */
   .button-group button {
     min-width: 150px;
   }
 
-  /* Responsive for smaller screens */
   @media (max-width: 480px) {
     .form-wrapper {
       padding: 1.5rem 1.8rem;
       margin: 2rem auto;
     }
-
     .button-group {
       justify-content: center;
     }

@@ -4,7 +4,7 @@
   import PasswordResetNotification from '$components/PasswordReset/PasswordResetNotification/PasswordResetNotification.svelte';
   import { requestPasswordReset } from '$lib/services/auth';
 
-  let email = '';
+  let email = '';       // ✅ this is required for bind:email
   let message = '';
   let error = '';
   let loading = false;
@@ -36,7 +36,7 @@
 <PasswordResetNotification {message} {error} />
 
 <PasswordResetForm
-  bind:email
+  bind:email      
   {loading}
   on:submit={handleReset}
   on:back={() => goto('/login')}
