@@ -14,10 +14,9 @@
 
 <Header company="Dairy Dashboard" platformName="Milk Yield">
   <HeaderNav>
-    <HeaderNavItem on:click={() => navigateTo("/analytics")}>
-      Bovine Analytics
-    </HeaderNavItem>
-      
+    <HeaderNavItem on:click={() => navigateTo("/analytics")}> Bovine Analytics </HeaderNavItem>
+   <HeaderNavItem on:click={onLogout}>Logout</HeaderNavItem>
+
 
 
   </HeaderNav>

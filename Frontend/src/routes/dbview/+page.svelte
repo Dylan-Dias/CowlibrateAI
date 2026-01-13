@@ -69,7 +69,6 @@
 
 <DBNav
   onNavigate={navigate}
-  onGenerateReport={generateReport}
   onLogout={logout}
 />
 
