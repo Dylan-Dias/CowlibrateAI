@@ -1,6 +1,5 @@
 <script>
   import { goto } from '$app/navigation';
-  import 'carbon-components-svelte/css/g10.css';
   import PasswordResetForm from '$components/PasswordReset/PasswordResetForm/PasswordResetForm.svelte';
   import PasswordResetNotification from '$components/PasswordReset/PasswordResetNotification/PasswordResetNotification.svelte';
   import { requestPasswordReset } from '$lib/services/auth';
