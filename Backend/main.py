@@ -11,7 +11,7 @@ import psycopg
 from psycopg import rows
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_mail import Mail
+from flask_mail import Mail, email_dispatched
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_mail import Message
@@ -635,6 +635,10 @@ def handle_exception(e):
     logging.exception("Unhandled Exception")
     return jsonify({"error": "Internal server error", "detail": str(e)}), 500
 
+def log_message(app, message):
+    app.logger.debug(message.subject)
+
+email_dispatched.connect(log_message)
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=8080, debug=True)
