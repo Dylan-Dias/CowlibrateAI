@@ -214,47 +214,63 @@ def login():
 def logout():
     return jsonify({"message": "Logout successful"}), 200
 
-# Password Rest WHAT I AM CURRENTLY WORKING ON
-@app.route('/forgot-password', methods=['POST'])
+def generate_reset_token(user_id, email):
+    """Generate a JWT token valid for 1 hour."""
+    payload = {
+        "user_id": user_id,
+        "email": email,
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+    }
+    return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
+
+@app.route("/forgot-password", methods=["POST", "GET"])
 def forgot_password():
+    if request.method == "GET":
+        # Optional: visiting in browser returns safe message
+        return jsonify({"message": "Send a POST request with {email} to reset password"}), 200
+
     data = request.get_json() or {}
     email = data.get("email")
     if not email:
         return jsonify({"error": "Email is required"}), 400
 
     try:
+        # Check if user exists
         with get_db_connection() as conn, conn.cursor() as cur:
             cur.execute("SELECT id FROM users WHERE email = %s", (email,))
             user = cur.fetchone()
 
+        # Always return success message to avoid exposing valid emails
+        response = {"message": "If that email exists, a reset link has been sent."}
+
         if not user:
-            return jsonify({"message": "If that email exists, a reset link has been sent."})
+            return jsonify(response), 200
 
-        # Handle tuple vs dict
-        user_id = user["id"] if isinstance(user, dict) else user[0]
+        # Generate token
+        token = generate_reset_token(user["id"], email)
 
-        # Create token
-        token = jwt.encode({
-            "user_id": user_id,
-            "email": email,
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-        }, JWT_SECRET, algorithm="HS256")
+        # Create reset link
+        reset_link = f"https://cowlibrate.com/reset-password/{token}"
 
-        reset_link = f"https://cowlibrate.onrender.com/reset-password/{token}"
+        # Send email safely
+        try:
+            msg = Message(
+                subject="CowlibrateAI Password Reset",
+                recipients=[email],
+                body=f"Click this link to reset your password: {reset_link}"
+            )
+            mail.send(msg)
+        except Exception as mail_error:
+            logging.exception("Failed to send password reset email")
+            # still return 200 to avoid leaking info
+            return jsonify(response), 200
 
-        # Send email
-        msg = Message(
-            subject="Password Reset for CowlibrateAI",
-            recipients=[email],
-            body=f"Click this link to reset your password: {reset_link}"
-        )
-        mail.send(msg)
-
-        return jsonify({"message": "If that email exists, a reset link has been sent."})
+        return jsonify(response), 200
 
     except Exception as e:
-        logging.exception("Forgot password error")
-        return jsonify({"error": "Failed to send reset email", "detail": str(e)}), 500
+        logging.exception("Unexpected error in forgot-password endpoint")
+        # return generic 200 so user can't detect backend errors
+        return jsonify({"message": "If that email exists, a reset link has been sent."}), 200
 
     
 # Reset Password Endpoint 
