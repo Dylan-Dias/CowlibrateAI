@@ -177,11 +177,12 @@ export async function requestPasswordReset(email) {
 // Reset password via API
 export async function resetPassword(token, newPassword, confirmPassword) {
   try {
-    const res = await fetch(`https://cowlibrate.onrender.com/reset-password/${token}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json; charset=utf-8' },
-      body: JSON.stringify({ password: newPassword, confirm_password: confirmPassword })
-    });
+    const res = await fetch(`https://cowlibrate.onrender.com/reset-password/${encodeURIComponent(token)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: newPassword })
+  });
+
 
     const data = await res.json();
 
