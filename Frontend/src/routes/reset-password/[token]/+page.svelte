@@ -30,7 +30,7 @@
       await resetPassword(token, newPassword, confirmPassword);
       success = true;
 
-      setTimeout(() => goto('/login'), 2000); // optional redirect
+      setTimeout(() => goto('/login'), 2000);
     } catch (err) {
       error = err.message;
     } finally {
@@ -42,6 +42,7 @@
 <main>
   <h2>Reset Your Password</h2>
 
-  <ResetNotifications {error} {success} />
-  <ResetForm {token} {loading} on:submit={handleReset} />
+  <!-- Use the correct imported component names -->
+  <ForgotPasswordNotification {error} {success} />
+  <ForgotPasswordForm {token} {loading} on:submit={handleReset} />
 </main>
