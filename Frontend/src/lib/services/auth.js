@@ -1,11 +1,11 @@
 import { authStore } from "$lib/stores/auth";
 import { browser } from "$app/environment";
 
-const API_URL = "https://cowlibrate.onrender.com"; // your actual backend URL
+const API_URL = "https://cowlibrate.onrender.com";
 
-/* -------------------------------------------------
-    Helper: Fetch Wrapper with Automatic Token
-------------------------------------------------- */
+// -------------------------------------------------
+// Helper: Fetch Wrapper with Automatic Token
+// -------------------------------------------------
 async function safeFetch(url, options = {}) {
   const token = browser ? localStorage.getItem("token") : null;
 
@@ -15,7 +15,7 @@ async function safeFetch(url, options = {}) {
       ...options,
       headers: {
         "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : undefined, // ✅ always include if exists
+        Authorization: token ? `Bearer ${token}` : undefined,
         ...(options.headers || {}),
       },
     });
@@ -37,9 +37,9 @@ async function safeFetch(url, options = {}) {
   return data;
 }
 
-/* -------------------------------------------------
-    Helper: Save Auth Data (Store + localStorage)
-------------------------------------------------- */
+// -------------------------------------------------
+// Helper: Save Auth Data (Store + localStorage)
+// -------------------------------------------------
 function saveAuth(token, user) {
   if (browser) {
     localStorage.setItem("token", token);
@@ -48,11 +48,10 @@ function saveAuth(token, user) {
   authStore.setAuth(token, user);
 }
 
-/* -------------------------------------------------
-    AUTH FUNCTIONS
-------------------------------------------------- */
+// -------------------------------------------------
+// AUTH FUNCTIONS
+// -------------------------------------------------
 
-// ✅ REGISTER
 export async function register(username, email, password, role = "user") {
   const data = await safeFetch(`${API_URL}/register`, {
     method: "POST",
@@ -63,11 +62,9 @@ export async function register(username, email, password, role = "user") {
   return data;
 }
 
-// ✅ LOGIN
 export async function login(username, password) {
   const data = await safeFetch(`${API_URL}/login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
   });
 
@@ -81,7 +78,6 @@ export async function login(username, password) {
   return data;
 }
 
-// ✅ LOGOUT
 export function logout() {
   if (browser) {
     localStorage.removeItem("token");
@@ -90,51 +86,29 @@ export function logout() {
   authStore.clearAuth();
 }
 
-/* -------------------------------------------------
-    AUTHORIZED FETCH WRAPPER
-------------------------------------------------- */
+// -------------------------------------------------
+// Protected API Calls (uses safeFetch)
+// -------------------------------------------------
 export async function authFetch(endpoint, options = {}) {
   if (!endpoint.startsWith("/")) endpoint = `/${endpoint}`;
   const fullUrl = `${API_URL}${endpoint}`;
   return safeFetch(fullUrl, options);
 }
 
-/* -------------------------------------------------
-   Protected API Calls
-------------------------------------------------- */
-async function fetchHealthData() {
-  const res = await fetch("https://cowlibrate.onrender.com/health-distribution", {
-    headers: { "Authorization": `Bearer ${token}` }
-  });
-  if (!res.ok) {
-    console.error("Failed to fetch health data:", res.status);
-    return { labels: [], series: [] };
-  }
-  return await res.json();
+export async function fetchHealthData() {
+  return authFetch("/health-distribution");
 }
 
-async function fetchBreedData() {
-  const res = await fetch("https://cowlibrate.onrender.com/breed-distribution", {
-    headers: { "Authorization": `Bearer ${token}` }
-  });
-  if (!res.ok) return { labels: [], series: [] };
-  return await res.json();
+export async function fetchBreedData() {
+  return authFetch("/breed-distribution");
 }
 
-async function fetchMilkYieldData() {
-  const res = await fetch("https://cowlibrate.onrender.com/MilkYield-distribution", {
-    headers: { "Authorization": `Bearer ${token}` }
-  });
-  if (!res.ok) return { labels: [], series: [] };
-  return await res.json();
+export async function fetchMilkYieldData() {
+  return authFetch("/MilkYield-distribution");
 }
 
-async function fetchWaterData() {
-  const res = await fetch("https://cowlibrate.onrender.com/water-intake", {
-    headers: { "Authorization": `Bearer ${token}` }
-  });
-  if (!res.ok) return { labels: [], series: [] };
-  return await res.json();
+export async function fetchWaterData() {
+  return authFetch("/water-intake");
 }
 
 export async function submitOptimization(data) {
@@ -144,54 +118,47 @@ export async function submitOptimization(data) {
   });
 }
 
-// src/lib/services/auth.js
-
+// -------------------------------------------------
+// Password Reset
+// -------------------------------------------------
 export async function requestPasswordReset(email) {
-  const res = await fetch(
-    'https://cowlibrate.onrender.com/forgot-password',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email })
-    }
-  );
+  const res = await fetch(`${API_URL}/forgot-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
 
   let data;
   try {
     data = await res.json();
   } catch {
-    throw new Error('Invalid server response');
+    throw new Error("Invalid server response");
   }
 
   if (!res.ok) {
-    throw new Error(
-      data?.error || 'Failed to send reset instructions'
-    );
+    throw new Error(data?.error || "Failed to send reset instructions");
   }
 
   return data;
 }
 
-// Reset password via API
-export async function resetPassword(token, newPassword, confirmPassword) {
-  try {
-    const res = await fetch(`https://cowlibrate.onrender.com/reset-password/${encodeURIComponent(token)}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password: newPassword })
+export async function resetPassword(token, newPassword) {
+  const res = await fetch(`${API_URL}/reset-password/${encodeURIComponent(token)}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password: newPassword }),
   });
 
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || 'Failed to reset password.');
-    }
-
-    return data; // success response
-  } catch (err) {
-    throw new Error(err.message || 'Network error. Please try again.');
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error("Invalid server response");
   }
+
+  if (!res.ok) {
+    throw new Error(data.error || "Failed to reset password.");
+  }
+
+  return data;
 }

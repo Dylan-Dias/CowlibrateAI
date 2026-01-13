@@ -228,16 +228,17 @@ def forgot_password():
             user = cur.fetchone()
 
         if not user:
-            # Always return success message to avoid leaking info
             return jsonify({"message": "If that email exists, a reset link has been sent."})
 
-        # Create token for password reset
-        token = jwt.encode({
-        "user_id": user["id"],
-        "email": email,          # <-- add this
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-    }, JWT_SECRET, algorithm="HS256")
+        # Handle tuple vs dict
+        user_id = user["id"] if isinstance(user, dict) else user[0]
 
+        # Create token
+        token = jwt.encode({
+            "user_id": user_id,
+            "email": email,
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+        }, JWT_SECRET, algorithm="HS256")
 
         reset_link = f"https://cowlibrate.onrender.com/reset-password/{token}"
 
@@ -254,6 +255,7 @@ def forgot_password():
     except Exception as e:
         logging.exception("Forgot password error")
         return jsonify({"error": "Failed to send reset email", "detail": str(e)}), 500
+
     
 # Reset Password Endpoint 
 @app.route("/reset-password/<token>", methods=["POST"])
