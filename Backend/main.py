@@ -32,24 +32,17 @@ if not JWT_SECRET or not DATABASE_URL:
 # -------------------------
 # Flask setup
 # -------------------------
+mail = Mail()
 app = Flask(__name__)
+mail.init_app(app)
 FRONTEND_URLS = os.environ.get("FRONTEND_URLS", "")
 origins = FRONTEND_URLS.split(",") if FRONTEND_URLS else []
 CORS(app, resources={r"/*": {"origins": origins}})
 # Logging
 logging.basicConfig(level=logging.INFO)
 
-# Mail (optional)
-app.config.update(
-    MAIL_SERVER=os.getenv("MAIL_SERVER"),
-    MAIL_PORT=int(os.getenv("MAIL_PORT", 587)),
-    MAIL_USERNAME=os.getenv("MAIL_USERNAME"),
-    MAIL_PASSWORD=os.getenv("MAIL_PASSWORD"),
-    MAIL_USE_TLS=True,
-    MAIL_USE_SSL=False,
-    MAIL_DEFAULT_SENDER=os.getenv("MAIL_DEFAULT_SENDER")
-)
-mail = Mail(app)
+
+
 
 limiter = Limiter(
     key_func=get_remote_address,  # specify key_func explicitly
@@ -118,7 +111,7 @@ def send_reset_email(user_email):
     reset_url = url_for("reset_password", token=token, _external=True)
     msg = Message(
         subject="Password Reset Request",
-        sender=app.config["MAIL_DEFAULT_SENDER"],
+        sender= "maneater6456@gmail.com",
         recipients=[user_email],
         body=f"Hi,\n\nClick the link below to reset your password:\n{reset_url}\n\nIf you didn't request this, ignore this email.\n\nThanks!"
     )
