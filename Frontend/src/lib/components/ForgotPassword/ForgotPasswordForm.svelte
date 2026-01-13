@@ -1,6 +1,6 @@
 <script>
   import { Form, FormGroup, PasswordInput } from 'carbon-components-svelte';
-  import SubmitButton from '../SubmitButton/SubmitButton.svelte';
+  import SubmitButton from '$components/Registration/SubmitButton/SubmitButton.svelte';
   import { createEventDispatcher } from 'svelte';
 
   export let token;
