@@ -4,8 +4,8 @@
   import { goto } from '$app/navigation';
 
   import { register } from '$lib/services/auth';
-  import { RegistrationForm } from '$lib/components/Registration/Form/RegistrationForm.svelte';
-  import { Notifications } from '$lib/components/Registration/Notifications/Notifications.svelte';
+  import  RegistrationForm  from '$lib/components/Registration/Form/RegistrationForm.svelte';
+  import  Notifications  from '$lib/components/Registration/Notifications/Notifications.svelte';
   import SubmitButton from '$components/Registration/SubmitButton/SubmitButton.svelte';
 
   let username = '';
