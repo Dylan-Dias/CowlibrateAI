@@ -8,7 +8,7 @@ from database import get_db_connection
 from . import auth_bp  # blueprint from __init__.py
 from utils import token_required, generate_reset_token, confirm_reset_token, send_reset_email
 from extensions import mail, limiter  # assuming you have these set up globally
-
+from utils import JWT_SECRET
 
 
 auth_bp = Blueprint("auth", __name__)

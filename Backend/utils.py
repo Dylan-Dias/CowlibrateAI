@@ -7,6 +7,9 @@ from config import Config  # your global config file with SECRET_KEY
 from extensions import mail  # Flask-Mail
 from flask_mail import Message
 
+import os 
+JWT_SECRET = os.getenv("JWT_SECRET")
+
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
