@@ -12,11 +12,10 @@ function authHeaders() {
 
 /* ---------- HEALTH ---------- */
 export async function getHealthChartData() {
-  const res = await fetch(`${API}/health-distribution`, {
+  const res = await fetch(`${API_URL}/health-distribution`, {
     headers: authHeaders()
   });
 
-  
   const { labels = [], series = [] } = await res.json();
 
   return labels.map((label, i) => ({
@@ -27,11 +26,10 @@ export async function getHealthChartData() {
 
 /* ---------- BREED ---------- */
 export async function getBreedChartData() {
-  const res = await fetch(`${API}/breed-distribution`, {
+  const res = await fetch(`${API_URL}/breed-distribution`, {
     headers: authHeaders()
   });
 
-  
   const { labels = [], series = [] } = await res.json();
 
   return labels.map((label, i) => ({
@@ -42,11 +40,10 @@ export async function getBreedChartData() {
 
 /* ---------- MILK YIELD ---------- */
 export async function getMilkYieldChartData() {
-  const res = await fetch(`${API}/MilkYield-distribution`, {
+  const res = await fetch(`${API_URL}/MilkYield-distribution`, {
     headers: authHeaders()
   });
 
-  
   const { labels = [], series = [] } = await res.json();
 
   return labels.map((label, i) => ({
@@ -58,11 +55,10 @@ export async function getMilkYieldChartData() {
 
 /* ---------- WATER INTAKE ---------- */
 export async function getWaterIntakeChartData() {
-  const res = await fetch(`${API}/water-intake`, {
+  const res = await fetch(`${API_URL}/water-intake`, {
     headers: authHeaders()
   });
 
-  
   const { labels = [], series = [] } = await res.json();
 
   return labels.map((label, i) => ({
