@@ -1,4 +1,3 @@
 # Backend/wsgi.py
-from .submissions import create_app  # relative import from Backend package
-
+from .submissions import create_app  # relative import
 app = create_app()
