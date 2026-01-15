@@ -3,6 +3,7 @@
   import PasswordResetForm from '$components/PasswordReset/PasswordResetForm/PasswordResetForm.svelte';
   import PasswordResetNotification from '$components/PasswordReset/PasswordResetNotification/PasswordResetNotification.svelte';
 
+  import { requestPasswordReset } from '$lib/API/PasswordResetAPI/PasswordResetAPI';
   let email = '';       // ✅ this is required for bind:email
   let message = '';
   let error = '';

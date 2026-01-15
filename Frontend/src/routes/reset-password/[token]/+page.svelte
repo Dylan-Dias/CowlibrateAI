@@ -4,7 +4,7 @@
 
   import ForgotPasswordForm from '$components/ForgotPassword/ForgotPasswordForm.svelte';
   import ForgotPasswordNotification from '$components/ForgotPassword/ForgotPasswordNotification.svelte';
-  import { resetPassword } from '$lib/services/auth';
+  import { resetPassword } from '$lib/API/PasswordResetAPI/ResetPasswordAPI';
 
   let token;
   $: token = $page.params.token;
