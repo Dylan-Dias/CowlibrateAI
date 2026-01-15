@@ -1,6 +1,6 @@
 <script>
   import { Form, FormGroup, TextInput, PasswordInput, Button } from "carbon-components-svelte";
-  import { safeFetch } from '../../API/AuthenticationAPI/LoginAPI.js';
+  import { safeFetch } from '../../API/AuthenticationAPI/SafeFetchAPI';
 
   export let username = '';
   export let password = '';
