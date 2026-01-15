@@ -8,11 +8,11 @@
   import BreedDonut from "$components/Analytics/Charts/BreedDonut.svelte";
   import MilkYieldBar from "$components/Analytics/Charts/MilkYieldBar.svelte";
   import WaterIntakeBar from "$components/Analytics/Charts/WaterIntakeBar.svelte";
-  import { fetchBreedData } from "$lib/API/AnalyticsAPI/BreedDataAPI.js"; // Add .js potentially 
+  
+  import { fetchBreedData } from "$lib/API/AnalyticsAPI/BreedDataAPI.js";
   import { fetchHealthData } from "$lib/API/AnalyticsAPI/HealthDataAPI.js";
   import { fetchMilkYieldData } from "$lib/API/AnalyticsAPI/MilkYieldDataAPI.js";
   import { fetchWaterData } from "$lib/API/AnalyticsAPI/WaterDataAPI.js";
-  import  AuthFetchAPI  from "../../API/AuthenticationAPI/AuthFetchAPI";
   
   import { 
     getHealthChartData,
