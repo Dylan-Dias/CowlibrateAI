@@ -1,1 +1,1 @@
-const API_URL = "https://cowlibrate.onrender.com";
+export const API_URL = "https://cowlibrate.onrender.com";
