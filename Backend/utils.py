@@ -3,8 +3,8 @@ import jwt
 import datetime
 from functools import wraps
 from flask import request, jsonify
-from Backend.config import Config  # your global config file with SECRET_KEY
-from Backend.extensions import mail  # Flask-Mail
+from config import Config  # your global config file with SECRET_KEY
+from extensions import mail  # Flask-Mail
 from flask_mail import Message
 
 def token_required(f):

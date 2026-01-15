@@ -1,12 +1,12 @@
 from flask import Flask
-from Backend.extensions import mail, cors, limiter
-from Backend.auth.routes import auth_bp  # if needed
+from extensions import mail, cors, limiter
+from auth.routes import auth_bp  # if needed
 # any other imports that used relative paths
 
 # submissions/__init__.py
-from Backend.submissions.routes import submissions_bp
+from submissions.routes import submissions_bp
 
-from Backend.analytics.routes import analytics_bp
+from analytics.routes import analytics_bp
 
 
 def create_app():
@@ -14,7 +14,7 @@ def create_app():
     app = Flask(__name__)
 
     # Load configuration
-    app.config.from_object("Backend.config.Config")
+    app.config.from_object("config.Config")
 
     # Initialize extensions
     mail.init_app(app)

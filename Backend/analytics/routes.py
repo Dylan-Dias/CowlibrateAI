@@ -1,7 +1,7 @@
 # app/analytics/routes.py
 from flask import Blueprint, jsonify
-from Backend.database import get_db_connection
-from Backend.utils import token_required
+from database import get_db_connection
+from utils import token_required
 import logging
 
 analytics_bp = Blueprint("analytics", __name__, url_prefix="/api/analytics")
