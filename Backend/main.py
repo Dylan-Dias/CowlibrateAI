@@ -29,6 +29,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if not JWT_SECRET or not DATABASE_URL:
     raise RuntimeError("Missing required environment variables (JWT_SECRET, DATABASE_URL)")
 
+
 # -------------------------
 # Flask setup
 # -------------------------
@@ -42,7 +43,14 @@ CORS(app, resources={r"/*": {"origins": origins}})
 logging.basicConfig(level=logging.INFO)
 
 
-
+# CORS Added 01/14/2026 - Dylan Start from here tommorrow <-
+CORS(
+    app,
+    resources={r"/*": {"origins": ["https://cowlibrate.com", "https://cowlibrate.pt"]}},
+    supports_credentials=True,
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"]
+)
 
 limiter = Limiter(
     key_func=get_remote_address,  # specify key_func explicitly
