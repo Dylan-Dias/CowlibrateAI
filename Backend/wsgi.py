@@ -1,11 +1,9 @@
-# wsgi.py
 from submissions import create_app
 from flask_cors import CORS
-from flask import Flask
 
-# Create the Flask app using your factory
 app = create_app()
 
+# Enable CORS for both frontend domains
 CORS(
     app,
     origins=["https://cowlibrate.com", "https://cowlibrate.pt"],
@@ -19,6 +17,10 @@ CORS(
 def index():
     return "CowlibrateAI backend is running", 200
 
+
+
+
 if __name__ == "__main__":
-    # Only used when running locally
-    app.run(debug=True)
+    app.run()
+
+

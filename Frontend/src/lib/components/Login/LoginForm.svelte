@@ -1,11 +1,26 @@
 <script>
   import { Form, FormGroup, TextInput, PasswordInput, Button } from "carbon-components-svelte";
-
+  import { safeFetch } from 'src/lib/API/AuthenticationAPI/LoginAPI.js';
   export let username = '';
   export let password = '';
   export let onSubmit;
   export let onForgotPassword;
   
+  async function submitLogin() {
+    try {
+      const res = await safeFetch("https://cowlibrate.onrender.com/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",  // important for cookies/sessions
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+      console.log("Login response:", data);
+    } catch (err) {
+      console.error("Login failed:", err);
+    }
+  }
 </script>
 
 <Form on:submit={onSubmit}>

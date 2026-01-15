@@ -55,6 +55,8 @@ def register():
 @auth_bp.route("/login", methods=["POST"])
 @limiter.limit("5 per minute")
 def login():
+    if request.method == "OPTIONS":
+        return "", 200
     data = request.get_json() or {}
     username, password = data.get("username"), data.get("password")
 
