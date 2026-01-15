@@ -36,7 +36,7 @@ def register():
             "user_id": user_id,
             "role": role,
             "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-        }, generate_reset_token.JWT_SECRET, algorithm="HS256")
+        }, JWT_SECRET, algorithm="HS256")
 
         return jsonify({
             "success": True,
@@ -79,7 +79,7 @@ def login():
                 "user_id": user["id"],
                 "role": user["role"],
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-            }, generate_reset_token.JWT_SECRET, algorithm="HS256")
+            }, JWT_SECRET, algorithm="HS256")
 
             return jsonify({
                 "success": True,
