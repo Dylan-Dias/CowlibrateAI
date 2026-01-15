@@ -1,5 +1,4 @@
-from server import app 
-if __name__ == "__main__":
-    app.run()
+# Backend/wsgi.py
+from .submissions import create_app  # relative import from Backend package
 
-    
+app = create_app()
