@@ -10,7 +10,7 @@ analytics_bp = Blueprint("analytics", __name__, url_prefix="/api/analytics")
 # Analytics Endpoints
 # -------------------------
 
-@analytics_bp.route("/milk-yield", methods=["GET"])
+@analytics_bp.route("/milk-yield", methods=["GET", "OPTIONS"])
 @token_required
 def milk_yield_distribution(user_id):
     try:
@@ -40,7 +40,7 @@ def milk_yield_distribution(user_id):
         return jsonify({"labels": [], "series": [], "error": str(e)}), 500
 
 
-@analytics_bp.route("/health", methods=["GET"])
+@analytics_bp.route("/health", methods=["GET", "OPTIONS"])
 @token_required
 def health_distribution(user_id):
     try:
@@ -65,7 +65,7 @@ def health_distribution(user_id):
         return jsonify({"labels": [], "series": [], "error": str(e)}), 500
 
 
-@analytics_bp.route("/breed", methods=["GET"])
+@analytics_bp.route("/breed", methods=["GET", "OPTIONS"])
 @token_required
 def breed_distribution(user_id):
     try:
@@ -87,7 +87,7 @@ def breed_distribution(user_id):
         return jsonify({"labels": [], "series": [], "error": str(e)}), 500
 
 
-@analytics_bp.route("/water-intake", methods=["GET"])
+@analytics_bp.route("/water-intake", methods=["GET", "OPTIONS"])
 @token_required
 def water_distribution(user_id):
     try:
