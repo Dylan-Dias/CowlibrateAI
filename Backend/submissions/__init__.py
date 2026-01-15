@@ -1,9 +1,13 @@
 from flask import Flask
-from ..extensions import mail, cors, limiter
-from ..auth.routes import auth_bp
-from .routes import submissions_bp
-# from .optimization.routes import optimization_bp  # if you have optimization routes
-from ..analytics.routes import analytics_bp
+from Backend.extensions import mail, cors, limiter
+from Backend.auth.routes import auth_bp  # if needed
+# any other imports that used relative paths
+
+# submissions/__init__.py
+from Backend.submissions.routes import submissions_bp
+
+from Backend.analytics.routes import analytics_bp
+
 
 def create_app():
     """Factory function to create Flask app"""

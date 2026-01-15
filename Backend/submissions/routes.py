@@ -1,7 +1,7 @@
 # app/submissions/routes.py
 from flask import Blueprint, request, jsonify
-from ..database import get_db_connection
-from ..auth.utils import token_required
+from Backend.database import get_db_connection
+from Backend.utils import token_required
 import json
 import logging
 

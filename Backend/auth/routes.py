@@ -4,10 +4,10 @@ import datetime
 import logging
 from flask import request, jsonify
 from flask_mail import Message
-from ..database import get_db_connection
+from Backend.database import get_db_connection
 from . import auth_bp  # blueprint from __init__.py
-from .utils import  token_required, generate_reset_token, confirm_reset_token, send_reset_email
-from ..extensions import mail, limiter  # assuming you have these set up globally
+from Backend.utils import token_required, generate_reset_token, confirm_reset_token, send_reset_email
+from Backend.extensions import mail, limiter  # assuming you have these set up globally
 
 
 @auth_bp.route("/")
