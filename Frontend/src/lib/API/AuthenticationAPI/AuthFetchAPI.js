@@ -1,6 +1,6 @@
 import { safeFetch } from "./SafeFetchAPI";
 
-import { API_URL } from "$lib/config";
+import { API_URL } from "$lib/config.js";
 
 export async function authFetch(endpoint, options = {}) {
   if (!endpoint.startsWith("/")) endpoint = `/${endpoint}`;
