@@ -1,12 +1,17 @@
 # wsgi.py
 from submissions import create_app
 from flask_cors import CORS
+from flask import Flask
 
 # Create the Flask app using your factory
 app = create_app()
 
-# Enable CORS for both frontends
-CORS(app, origins=["https://cowlibrate.com", "https://cowlibrate.pt"], supports_credentials=True)
+CORS(
+    app,
+    origins=["https://cowlibrate.com", "https://cowlibrate.pt"],
+    supports_credentials=True,
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+)
 
 # Optional: add a root route to prevent 404
 @app.route("/")
