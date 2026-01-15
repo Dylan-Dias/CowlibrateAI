@@ -1,11 +1,18 @@
-from flask import Flask
-from flask_cors import CORS
+# wsgi.py
 from submissions import create_app
+from flask_cors import CORS
 
+# Create the Flask app using your factory
 app = create_app()
 
-# Allow requests from your frontend
-CORS(app, origins=["https://cowlibrate.com"], supports_credentials=True)
+# Enable CORS for both frontends
+CORS(app, origins=["https://cowlibrate.com", "https://cowlibrate.pt"], supports_credentials=True)
+
+# Optional: add a root route to prevent 404
+@app.route("/")
+def index():
+    return "CowlibrateAI backend is running", 200
 
 if __name__ == "__main__":
-    app.run()
+    # Only used when running locally
+    app.run(debug=True)
