@@ -1,5 +1,5 @@
-import { safeFetch } from "../AuthenticationAPI/SafeFetchAPI";
-import { saveAuth } from "../AuthenticationAPI/SaveAuthAPI";
+import { safeFetch } from "./SafeFetchAPI";
+import { saveAuth } from "./SaveAuthAPI";
 
 const API_URL = "https://cowlibrate.onrender.com";
 
