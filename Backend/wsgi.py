@@ -8,7 +8,7 @@ CORS(
     app,
     origins=["https://cowlibrate.com", "https://cowlibrate.pt"],
     supports_credentials=True,
-    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["Content-Type", "Authorization"]
 )
 
