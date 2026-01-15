@@ -10,9 +10,6 @@ from utils import token_required, generate_reset_token, confirm_reset_token, sen
 from extensions import mail, limiter  # assuming you have these set up globally
 
 
-@auth_bp.route("/")
-def index():
-    return "CowlibrateAI backend is running", 200
 
 @auth_bp.route("/register", methods=["POST"])
 def register():
