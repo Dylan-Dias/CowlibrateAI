@@ -1,4 +1,4 @@
-const API = "https://cowlibrate.onrender.com";
+import { API_URL } from "$lib/config.js";
 
 function authHeaders() {
   const token = localStorage.getItem("token");

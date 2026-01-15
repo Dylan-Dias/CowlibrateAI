@@ -12,6 +12,7 @@ export async function safeFetch(url, options = {}) {
         Authorization: token ? `Bearer ${token}` : undefined,
         ...(options.headers || {}),
       },
+      credentials: "include", // <-- Add this line
     });
   } catch (err) {
     throw new Error("Network error: Failed to connect to backend");
