@@ -1,7 +1,7 @@
 import { safeFetch } from "./SafeFetchAPI";
 import { saveAuth } from "./SaveAuthAPI";
 
-import { API_URL } from "../config";
+import { API_URL } from "../../config";
 
 export async function login(username, password) {
   const data = await safeFetch(`${API_URL}/login`, {

@@ -1,4 +1,4 @@
-import { API_URL } from "../config";
+import { API_URL } from "../../config";
 
 export async function resetPassword(token, newPassword) {
   const res = await fetch(`${API_URL}/reset-password/${encodeURIComponent(token)}`, {
