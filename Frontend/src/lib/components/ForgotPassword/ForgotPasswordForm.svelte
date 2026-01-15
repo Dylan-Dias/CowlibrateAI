@@ -3,7 +3,6 @@
   import SubmitButton from '$components/Registration/SubmitButton/SubmitButton.svelte';
   import { createEventDispatcher } from 'svelte';
 
-  export let token;
   export let loading = false;
 
   let newPassword = '';
