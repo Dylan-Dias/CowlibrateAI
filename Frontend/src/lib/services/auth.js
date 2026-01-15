@@ -1,7 +1,6 @@
 import { authStore } from "$lib/stores/auth";
 import { browser } from "$app/environment";
 
-const API_URL = "https://cowlibrate.onrender.com";
 
 // -------------------------------------------------
 // Helper: Fetch Wrapper with Automatic Token

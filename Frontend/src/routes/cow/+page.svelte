@@ -1,6 +1,7 @@
 <script>
   import * as XLSX from "xlsx";
   import { goto } from "$app/navigation";
+  import { submitOptimization } from "$lib/API/OptimizationAPI/SubmitOptimizationAPI";
   import DashboardHeader from '$lib/components/Dashboard/UI/HeaderNav.svelte';
   import BovinesTable from '$lib/components/Dashboard/Inputs/BovinesTable.svelte';
   import FeedsTable from '$lib/components/Dashboard/Inputs/FeedsTable.svelte';

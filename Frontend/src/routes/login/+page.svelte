@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation';
   import LoginForm from '$components/Login/LoginForm.svelte';
   import LoginNotifications from '$components/Login/LoginNotifications.svelte';
-  import { login } from '$lib/services/auth';
+  import { login } from '$lib/API/AuthenticationAPI/LoginAPI';
 
 
   let username = '';
