@@ -2,5 +2,6 @@
     "files.exclude": {
         "**/cowlibrate.db": true,
         "**/tempCodeRunnerFile.py": true
-    }
+    },
+    "python.REPL.enableREPLSmartSend": false
 }

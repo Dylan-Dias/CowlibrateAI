@@ -1,5 +1,5 @@
 # app/analytics/routes.py
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from database import get_db_connection
 from utils import token_required
 import logging
@@ -13,6 +13,8 @@ analytics_bp = Blueprint("analytics", __name__, url_prefix="/api/analytics")
 @analytics_bp.route("/milk-yield", methods=["GET", "OPTIONS"])
 @token_required
 def milk_yield_distribution(user_id):
+    if request.method == "OPTIONS":
+        return "", 200
     try:
         conn = get_db_connection()
         cur = conn.cursor()
@@ -43,6 +45,8 @@ def milk_yield_distribution(user_id):
 @analytics_bp.route("/health", methods=["GET", "OPTIONS"])
 @token_required
 def health_distribution(user_id):
+    if request.method == "OPTIONS":
+        return "", 200
     try:
         conn = get_db_connection()
         cur = conn.cursor()
@@ -68,6 +72,8 @@ def health_distribution(user_id):
 @analytics_bp.route("/breed", methods=["GET", "OPTIONS"])
 @token_required
 def breed_distribution(user_id):
+    if request.method == "OPTIONS":
+        return "", 200
     try:
         conn = get_db_connection()
         cur = conn.cursor()
@@ -90,6 +96,8 @@ def breed_distribution(user_id):
 @analytics_bp.route("/water-intake", methods=["GET", "OPTIONS"])
 @token_required
 def water_distribution(user_id):
+    if request.method == "OPTIONS":
+        return "", 200
     try:
         conn = get_db_connection()
         cur = conn.cursor()
