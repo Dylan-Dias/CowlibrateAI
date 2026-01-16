@@ -13,7 +13,9 @@ JWT_SECRET = os.getenv("JWT_SECRET")
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = None
+        if request.method == "OPTIONS":
+            return "", 200
+       
         auth_header = request.headers.get("Authorization")
         if auth_header and auth_header.startswith("Bearer "):
             token = auth_header.split(" ")[1]

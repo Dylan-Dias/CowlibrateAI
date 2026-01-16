@@ -3,6 +3,7 @@
   import { goto } from "$app/navigation";
   import DBNav from '$lib/components/DatabaseView/DBNav.svelte';
   import DatabaseView from "$lib/components/DatabaseView/DatabaseView.svelte";
+  import { logout } from "$lib/API/AuthenticationAPI/LogoutAPI";
 
   let entries = [];
   let loading = true;
@@ -60,11 +61,7 @@
     pdf.save("Goat-Analytics-Report.pdf");
   }
 
-  function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    goto("/login");
-  }
+
 </script>
 
 <DBNav
