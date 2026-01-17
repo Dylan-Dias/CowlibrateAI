@@ -5,6 +5,7 @@
   import "carbon-components-svelte/css/g10.css";
   import "@carbon/charts/styles.css";
 import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
+import { injectAnalytics } from '@vercel/analytics/sveltekit'
 
 injectSpeedInsights();
 </script>
