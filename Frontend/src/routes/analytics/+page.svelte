@@ -2,18 +2,16 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
 
-  import DashboardHeader from "$lib/components/Analytics/UI/DashboardHeader.svelte";
+  // Carbon Layout Components
+  import { Grid, Row, Column, Tile } from "carbon-components-svelte";
 
+  import DashboardHeader from "$lib/components/Analytics/UI/DashboardHeader.svelte";
   import HealthDonut from "$components/Analytics/Charts/HealthDonut.svelte";
   import BreedDonut from "$components/Analytics/Charts/BreedDonut.svelte";
   import MilkYieldBar from "$components/Analytics/Charts/MilkYieldBar.svelte";
   import WaterIntakeBar from "$components/Analytics/Charts/WaterIntakeBar.svelte";
   
-  import { fetchBreedData } from "$lib/API/AnalyticsAPI/BreedDataAPI.js";
-  import { fetchHealthData } from "$lib/API/AnalyticsAPI/HealthDataAPI.js";
-  import { fetchMilkYieldData } from "$lib/API/AnalyticsAPI/MilkYieldDataAPI.js";
-  import { fetchWaterData } from "$lib/API/AnalyticsAPI/WaterDataAPI.js";
-  
+  // Services
   import { 
     getHealthChartData,
     getBreedChartData,
@@ -28,10 +26,13 @@
 
   onMount(async () => {
     try {
-      healthData = await getHealthChartData();
-      breedData = await getBreedChartData();
-      milkData = await getMilkYieldChartData();
-      waterData = await getWaterIntakeChartData();
+      // Parallel fetching is faster
+      [healthData, breedData, milkData, waterData] = await Promise.all([
+        getHealthChartData(),
+        getBreedChartData(),
+        getMilkYieldChartData(),
+        getWaterIntakeChartData()
+      ]);
     } catch (err) {
       console.error("Error loading analytics:", err);
     }
@@ -48,14 +49,59 @@
   }
 </script>
 
-<DashboardHeader
-  onNavigate={navigate}
-  onLogout={logout}
-/>
+<DashboardHeader onNavigate={navigate} onLogout={logout} />
 
-<main class="grid">
-  <HealthDonut {healthData} />
-  <BreedDonut {breedData} />
-  <MilkYieldBar {milkData} />
-  <WaterIntakeBar {waterData} />
-</main>
+<div class="dashboard-container">
+  <Grid>
+    <Row class="chart-row">
+      <Column lg={8} md={8} sm={4}>
+        <Tile class="chart-tile">
+          <HealthDonut {healthData} />
+        </Tile>
+      </Column>
+
+      <Column lg={8} md={8} sm={4}>
+        <Tile class="chart-tile">
+          <BreedDonut {breedData} />
+        </Tile>
+      </Column>
+    </Row>
+
+    <Row class="chart-row">
+      <Column lg={16} md={8} sm={4}>
+        <Tile class="chart-tile">
+          <MilkYieldBar {milkData} />
+        </Tile>
+      </Column>
+    </Row>
+
+    <Row class="chart-row">
+      <Column lg={16} md={8} sm={4}>
+        <Tile class="chart-tile">
+          <WaterIntakeBar {waterData} />
+        </Tile>
+      </Column>
+    </Row>
+  </Grid>
+</div>
+
+<style>
+  .dashboard-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    background-color: #f4f4f4; /* Light gray background to make Tiles pop */
+    min-height: 100vh;
+  }
+
+  /* Add spacing between rows */
+  :global(.chart-row) {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Ensure Tiles have a consistent look */
+  :global(.chart-tile) {
+    height: 100%;
+    min-height: 350px; /* Prevents layout shift before chart loads */
+    background-color: #ffffff;
+  }
+</style>
