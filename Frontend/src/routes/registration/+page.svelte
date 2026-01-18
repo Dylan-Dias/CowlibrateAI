@@ -52,7 +52,8 @@
 <main>
   <h1>Registration</h1>
 
-  <RegistrationNotifications {error} {success} />
+  <Notifications {error} {success} />
+
 
   <RegistrationForm
     bind:username
