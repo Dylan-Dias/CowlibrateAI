@@ -1,5 +1,5 @@
 <script>
-  import { SimpleBarChart } from "@carbon/charts-svelte";
+  import { BarChartSimple } from "@carbon/charts-svelte";
   import "@carbon/charts/styles.css";
 
   export let milkData = []; 
