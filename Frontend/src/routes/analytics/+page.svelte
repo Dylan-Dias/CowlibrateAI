@@ -6,7 +6,7 @@
   import { Grid, Row, Column, Tile } from "carbon-components-svelte";
 
   import DashboardHeader from "$lib/components/Analytics/UI/DashboardHeader.svelte";
-  import HealthDonut from "$components/Analytics/Charts/HealthDonut.svelte";
+  import HealthMeter from "$components/Analytics/Charts/HealthMeter.svelte";
   import BreedDonut from "$components/Analytics/Charts/BreedDonut.svelte";
   import MilkYieldBar from "$components/Analytics/Charts/MilkYieldBar.svelte";
   import WaterIntakeBar from "$components/Analytics/Charts/WaterIntakeBar.svelte";
@@ -56,7 +56,7 @@
     <Row class="chart-row">
       <Column lg={8} md={8} sm={4}>
         <Tile class="chart-tile">
-          <HealthDonut {healthData} />
+          <HealthMeter {healthData} />
         </Tile>
       </Column>
 
