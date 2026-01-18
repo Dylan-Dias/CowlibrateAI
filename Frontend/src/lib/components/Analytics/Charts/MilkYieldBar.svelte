@@ -36,4 +36,4 @@
   };
 </script>
 
-<SimpleBarChart data={topAndBottomData} {options} />
+<BarChartSimple data={topAndBottomData} {options} />

@@ -23,4 +23,4 @@
   };
 </script>
 
-<SimpleBarChart data={waterData} {options} />
+<BarChartSimple data={waterData} {options} />
